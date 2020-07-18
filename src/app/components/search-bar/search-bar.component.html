@@ -1,0 +1,18 @@
+<section class="input-container">
+  <form (ngSubmit)="onSubmit()" class="search-form">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search for images..."
+      name="searchParam"
+      [(ngModel)]="searchParam"
+      required
+      minlength="1"
+      maxlength="100"
+    />
+    <button type="submit" class="submit-btn">
+      <fa-icon [icon]="faSearch" class="fa-search-icon"></fa-icon>
+    </button>
+  </form>
+  <app-navbar class="app-navbar"></app-navbar>
+</section>

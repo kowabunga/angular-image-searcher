@@ -1,0 +1,10 @@
+.home-image {
+  display: flex;
+  justify-content: center;
+  &-container {
+    max-height: 1000px;
+    img {
+      width: 100%;
+    }
+  }
+}

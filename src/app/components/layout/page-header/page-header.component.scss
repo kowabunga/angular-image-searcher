@@ -1,0 +1,26 @@
+.navbar {
+  &-head {
+    background-color: #4c87f5;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 5rem;
+    font-size: 1.5rem;
+    border-bottom: 2px solid rgb(202, 202, 202);
+    z-index: 100;
+  }
+
+  &-ul {
+    display: flex;
+    list-style-type: none;
+    align-items: center;
+    justify-content: space-around;
+    width: 80%;
+
+    li a {
+      text-decoration: none;
+      color: #fff;
+    }
+  }
+}

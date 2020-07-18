@@ -1,0 +1,58 @@
+.app-navbar {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-container {
+  width: 100%;
+  display: flex;
+  background-color: rgb(253, 251, 251);
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 392px;
+  margin-left: 10px;
+
+  .search-input,
+  .submit-btn {
+    font-size: 2rem;
+    padding: 0.5rem;
+    margin: 1em 0;
+  }
+
+  .search-input {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid rgb(218, 218, 218);
+    border-radius: 30px 0 0 30px;
+    border-right: none;
+  }
+
+  .submit-btn {
+    right: 10px;
+    color: rgb(106, 106, 106);
+    background-color: transparent;
+    border: 1px solid rgb(218, 218, 218);
+    border-left: none;
+    border-radius: 0 30px 30px 0;
+
+    .fa-search-icon {
+      transition: 0.1s ease-in;
+      &:hover {
+        cursor: pointer;
+        color: #4c87f5;
+      }
+      &:active {
+        color: darken($color: #4c87f5, $amount: 5);
+      }
+    }
+  }
+}
+
+@media (max-width: 590px) {
+}
