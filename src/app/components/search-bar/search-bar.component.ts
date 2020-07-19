@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { PexelsApiService } from '../../services/pexels-api.service';
 import { UnsplashApiService } from '../../services/unsplash-api.service';
@@ -12,6 +12,7 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 })
 export class SearchBarComponent implements OnInit {
   @Input() isHome;
+  @Output() query: EventEmitter<string> = new EventEmitter();
 
   faSearch = faSearch; // Font awesome icon
   searchParam: string = '';
@@ -25,21 +26,7 @@ export class SearchBarComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onSubmit(query: string) {
-    // On submit, we make the appropriate api calls based on the url link we are in.
-    const urlRoute = this.router.url;
-
-    switch (urlRoute) {
-      case '/':
-        break;
-      case '/pexels':
-        break;
-      case '/unsplash':
-        break;
-      case '/pixabay':
-        break;
-      default:
-        break;
-    }
+  onSubmit(queryValue) {
+    if (queryValue.length > 0) this.query.emit(queryValue);
   }
 }

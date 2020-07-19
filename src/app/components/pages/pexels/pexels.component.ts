@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Image } from '../../../models/image';
 import { PexelsApiService } from '../../../services/pexels-api.service';
-import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-pexels',
@@ -13,12 +12,12 @@ export class PexelsComponent implements OnInit {
 
   constructor(private pexels: PexelsApiService) {}
 
-  ngOnInit(): void {
-    this.pexels.getPexelImages('cats').subscribe((images) => {
-      console.log(images);
+  ngOnInit(): void {}
+
+  onSearch(query) {
+    this.pexels.getPexelImages(query).subscribe((images) => {
       const imageArr = images.photos;
       this.pexelsImages = imageArr.map((image) => new Image(image, 'pexels'));
-      console.log(this.pexelsImages);
     });
   }
 }

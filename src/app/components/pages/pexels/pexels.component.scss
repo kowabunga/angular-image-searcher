@@ -1,0 +1,14 @@
+.pexels {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+
+  &-app-search-bar {
+    width: 100%;
+  }
+
+  &-app-navbar {
+    position: relative;
+    width: 100%;
+  }
+}

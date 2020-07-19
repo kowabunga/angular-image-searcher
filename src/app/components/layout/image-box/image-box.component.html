@@ -1,1 +1,38 @@
-<p>image-box works!</p>
+<!-- Three kinds of images, therefore three image boxe types -->
+
+<!-- Pexels Image -->
+<div class="image-box" *ngIf="type === 'pexels'">
+  <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
+  <b>
+    <div class="image-info">
+      <div class="image-info-information">
+        <a [href]="image.pageUrl" target="_blank" rel="noopener noreferrer"
+          >Photo</a
+        >
+        taken by
+        <a
+          href="{{ image.photographerUrl !== null && image.photographerUrl }}"
+          alt="Photographer page link"
+          target="_blank"
+          rel="noopener noreferrer"
+          >{{ image.photographer }}</a
+        >
+        on Pexels
+      </div>
+      <br />
+      <div class="image-info-attribution">
+        <a
+          class="image-info-attribution-pexel-link"
+          href="https://www.pexels.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img
+            [src]="'https://images.pexels.com/lib/api/pexels.png'"
+            alt="Pexels logo"
+          />
+        </a>
+      </div>
+    </div>
+  </b>
+</div>

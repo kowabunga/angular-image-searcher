@@ -1,1 +1,5 @@
-<p>image-gallery works!</p>
+<div class="gallery">
+  <ng-container *ngFor="let image of gallery">
+    <app-image-box [image]="image" [type]="type"></app-image-box>
+  </ng-container>
+</div>
