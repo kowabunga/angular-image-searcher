@@ -1,3 +1,6 @@
 export const environment = {
-  production: true
+  production: true,
+  PEXELS_API: '563492ad6f91700001000001c23d865b66374d4db54d5fc3d54070ef',
+  PIXABAY_API: '16453176-70c37799a00762d3627e70f61',
+  UNSPLASH_API: 'JXvPa11UJ2THDMeo_1xiZ3nlinTAlpPrNR07CC6K4tg',
 };

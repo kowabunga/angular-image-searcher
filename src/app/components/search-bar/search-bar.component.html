@@ -1,18 +1,21 @@
 <section class="input-container">
-  <form (ngSubmit)="onSubmit()" class="search-form">
-    <input
-      type="text"
-      class="search-input"
-      placeholder="Search for images..."
-      name="searchParam"
-      [(ngModel)]="searchParam"
-      required
-      minlength="1"
-      maxlength="100"
-    />
-    <button type="submit" class="submit-btn">
-      <fa-icon [icon]="faSearch" class="fa-search-icon"></fa-icon>
-    </button>
+  <form class="search-form" [ngClass]="{ middle: !isHome }">
+    <div class="search-shadow">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search for images..."
+        name="searchParam"
+        #query
+        [(ngModel)]="searchParam"
+        required
+        minlength="1"
+        maxlength="100"
+      />
+      <button type="submit" class="submit-btn" (click)="onSubmit(query.value)">
+        <fa-icon [icon]="faSearch" class="fa-search-icon"></fa-icon>
+      </button>
+    </div>
   </form>
-  <app-navbar class="app-navbar"></app-navbar>
+  <app-navbar class="app-navbar" *ngIf="isHome"></app-navbar>
 </section>

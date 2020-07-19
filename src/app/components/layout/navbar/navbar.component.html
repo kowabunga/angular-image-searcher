@@ -1,27 +1,43 @@
 <nav class="navbar-nav">
-  <ul class="navbar-ul">
-    <li class="navbar-ul-li">
-      <a routerLink="/" routerLinkActive="active">
+  <ul class="navbar-ul" [ngClass]="{ show: isShow }">
+    <li
+      class="navbar-ul-li"
+      [routerLinkActive]="['active']"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <a routerLink="/" (click)="this.isShow = false">
         All
       </a>
     </li>
-    <li class="navbar-ul-li">
-      <a routerLink="/pexels" routerLinkActive="active">
+    <li
+      class="navbar-ul-li"
+      [routerLinkActive]="['active']"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <a routerLink="/pexels" (click)="this.isShow = false">
         Pexels
       </a>
     </li>
-    <li class="navbar-ul-li">
-      <a routerLink="/unsplash" routerLinkActive="active">
+    <li
+      class="navbar-ul-li"
+      [routerLinkActive]="['active']"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <a routerLink="/unsplash" (click)="this.isShow = false">
         Unsplash
       </a>
     </li>
-    <li class="navbar-ul-li">
-      <a routerLink="/pixabay" routerLinkActive="active">
+    <li
+      class="navbar-ul-li"
+      [routerLinkActive]="['active']"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <a routerLink="/pixabay" (click)="this.isShow = false">
         Pixabay
       </a>
     </li>
   </ul>
-  <div class="hamburger">
+  <div class="hamburger" (click)="this.isShow = !this.isShow">
     <div class="bar"></div>
     <div class="bar"></div>
     <div class="bar"></div>

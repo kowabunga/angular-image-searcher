@@ -1,14 +1,30 @@
 .navbar {
   &-nav {
-    background-color: rgb(253, 251, 251);
+    background-color: transparent;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    z-index: 100;
+
     &-brand {
       color: #fff;
+    }
+
+    .hamburger {
+      display: none;
+      position: absolute;
+      top: 50%;
+      right: 2%;
+      transform: translate(-2%, -50%);
+
+      .bar {
+        height: 2px;
+        width: 27px;
+        margin: 3px 0 3px 0;
+        background-color: rgb(238, 238, 238);
+        transition: 0.1s ease-in;
+      }
     }
   }
 
@@ -17,39 +33,55 @@
     list-style-type: none;
     align-items: center;
     justify-content: space-evenly;
-    width: 50%;
+    width: 100%;
+
     li a {
       text-decoration: none;
-      color: rgb(106, 106, 106);
+      color: rgb(238, 238, 238);
 
       &:hover {
-        color: #2e2d2d;
+        color: darken($color: #4c87f5, $amount: 5);
       }
-    }
-  }
-
-  .hamburger {
-    position: absolute;
-    top: 50%;
-    right: 2%;
-    transform: translate(-2%, -50%);
-
-    .bar {
-      height: 2px;
-      width: 27px;
-      margin: 0 0 6px 0;
-      background-color: #fff;
-      transition: 0.3s ease-in;
     }
   }
 }
 
 .active {
-  color: purple;
+  text-decoration: underline;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 800px) {
   .navbar {
-    font-size: 1.2rem;
+    &-nav {
+      .hamburger {
+        display: flex;
+        flex-direction: column;
+        z-index: 10;
+        &:hover {
+          cursor: pointer;
+          .bar {
+            background-color: darken($color: #4c87f5, $amount: 5);
+          }
+        }
+      }
+    }
+    &-ul {
+      z-index: -1;
+      &.show {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        position: absolute;
+        height: 30vh;
+        top: 0;
+        right: 0;
+        background-color: rgb(85, 85, 85);
+        z-index: 1;
+        margin-left: 10px;
+      }
+      li a {
+        color: rgb(230, 230, 230);
+      }
+    }
   }
 }

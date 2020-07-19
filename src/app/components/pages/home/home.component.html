@@ -1,9 +1,18 @@
-<div class="home-image">
-  <div class="home-image-container">
-    <img
-      [src]="'assets/img/image_gallery.svg'"
-      alt="Gallery search with
-    person"
-    />
+<div class="home">
+  <div class="home-info">
+    <h1 class="home-info-h1">
+      Stock Images. High Quality. <span class="free-span">Free</span>
+    </h1>
+    <p class="home-info-p">
+      Search hundreds of free, high quality stock images from popular websites
+      such as <span class="home-info-p-pixabay"><em>Pixabay</em></span
+      >, <span class="home-info-p-pexels"><em>Pexels</em></span> and
+      <span class="home-info-p-unsplash"><em>Unsplash</em></span> all in one
+      convenient site.
+    </p>
+    <app-search-bar
+      class="home-app-search-bar"
+      [isHome]="false"
+    ></app-search-bar>
   </div>
 </div>
