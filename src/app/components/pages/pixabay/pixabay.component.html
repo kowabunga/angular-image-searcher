@@ -1,4 +1,13 @@
-<div class="pixabay">
-  <app-search-bar class="pixabay-app-search-bar"></app-search-bar>
+<div class="pexels">
+  <app-search-bar
+    class="pixabay-app-search-bar"
+    (query)="onSearch($event)"
+  ></app-search-bar>
   <app-navbar class="pixabay-app-navbar"></app-navbar>
+</div>
+<div>
+  <app-image-gallery
+    [gallery]="pixabayImages"
+    [type]="'pixabay'"
+  ></app-image-gallery>
 </div>

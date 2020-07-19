@@ -1,38 +1,98 @@
 <!-- Three kinds of images, therefore three image boxe types -->
 
-<!-- Pexels Image -->
-<div class="image-box" *ngIf="type === 'pexels'">
+<div class="image-box">
   <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
-  <b>
-    <div class="image-info">
-      <div class="image-info-information">
-        <a [href]="image.pageUrl" target="_blank" rel="noopener noreferrer"
-          >Photo</a
-        >
-        taken by
-        <a
-          href="{{ image.photographerUrl !== null && image.photographerUrl }}"
-          alt="Photographer page link"
-          target="_blank"
-          rel="noopener noreferrer"
-          >{{ image.photographer }}</a
-        >
-        on Pexels
-      </div>
-      <br />
-      <div class="image-info-attribution">
-        <a
-          class="image-info-attribution-pexel-link"
-          href="https://www.pexels.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            [src]="'https://images.pexels.com/lib/api/pexels.png'"
-            alt="Pexels logo"
-          />
-        </a>
-      </div>
+
+  <!-- Pexels Image -->
+  <div class="image-info" *ngIf="type === 'pexels'">
+    <div class="image-info-information">
+      <a [href]="image.pageUrl" target="_blank" rel="noopener noreferrer"
+        >Photo</a
+      >
+      taken by
+      <a
+        href="{{ image.photographerUrl }}"
+        alt="Photographer page link"
+        target="_blank"
+        rel="noopener noreferrer"
+        >{{ image.photographer }}</a
+      >
+      on Pexels
     </div>
-  </b>
+    <br />
+    <div class="image-info-attribution">
+      <a
+        class="image-info-attribution-pexel-link"
+        href="https://www.pexels.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          [src]="'https://images.pexels.com/lib/api/pexels.png'"
+          alt="Pexels logo"
+        />
+      </a>
+    </div>
+  </div>
+
+  <!-- Pixabay Image -->
+  <div class="image-info" *ngIf="type === 'pixabay'">
+    <div class="image-info-information">
+      <a href="{{ image.pageUrl }}" target="_blank" rel="noopener noreferrer"
+        >Photo</a
+      >
+      taken by
+      <a
+        href="https://pixabay.com/users/{{ image.photographer }} "
+        alt="Photographer page link"
+        target="_blank"
+        rel="noopener noreferrer"
+        >{{ image.photographer }}</a
+      >
+      on Pixabay.
+    </div>
+    <br />
+    <div class="image-info-attribution">
+      <a
+        class="image-info-attribution-pexel-link"
+        href="https://www.pixabay.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          [src]="'../../../../../assets/img/pixabay_logo.jpg'"
+          alt="Pexels logo"
+        />
+      </a>
+    </div>
+  </div>
+
+  <!-- Unsplash Image -->
+  <div class="image-info" *ngIf="type === 'unsplash'">
+    <div class="image-info-information">
+      <a href="{{ image.pageUrl }}" target="_blank" rel="noopener noreferrer"
+        >Photo</a
+      >
+      taken by
+      <a
+        href="{{ image.photographerUrl }}"
+        alt="Photographer page link"
+        target="_blank"
+        rel="noopener noreferrer"
+        >{{ image.photographer }}</a
+      >
+      on Pixabay.
+    </div>
+    <br />
+    <div class="image-info-attribution-unsplash-link">
+      Photos provided by:
+      <a
+        href="https://www.unsplash.com"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Unsplash
+      </a>
+    </div>
+  </div>
 </div>

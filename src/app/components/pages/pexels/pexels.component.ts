@@ -16,6 +16,7 @@ export class PexelsComponent implements OnInit {
 
   onSearch(query) {
     this.pexels.getPexelImages(query).subscribe((images) => {
+      console.log(images);
       const imageArr = images.photos;
       this.pexelsImages = imageArr.map((image) => new Image(image, 'pexels'));
     });
