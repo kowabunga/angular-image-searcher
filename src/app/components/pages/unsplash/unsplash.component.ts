@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Image } from '../../../models/image';
 import { UnsplashApiService } from 'src/app/services/unsplash-api.service';
+import { ImageStorageService } from 'src/app/services/image-storage.service';
 
 @Component({
   selector: 'app-unsplash',
@@ -10,17 +11,27 @@ import { UnsplashApiService } from 'src/app/services/unsplash-api.service';
 export class UnsplashComponent implements OnInit {
   unsplashImages: Image[];
 
-  constructor(private unsplash: UnsplashApiService) {}
+  constructor(
+    private unsplash: UnsplashApiService,
+    private imageStorage: ImageStorageService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.imageStorage
+      .getImages('unsplash')
+      .subscribe((images) => (this.unsplashImages = images));
+  }
 
-  onSearch(query) {
+  onSearch(query): void {
     this.unsplash.getUnsplashImages(query).subscribe((images) => {
       console.log(images);
-      const imageArr = images.results;
-      this.unsplashImages = imageArr.map(
+      const imageArr = images.results.map(
         (image) => new Image(image, 'unsplash')
       );
+      this.imageStorage.addImages(imageArr, 'unsplash');
+      this.imageStorage
+        .getImages('unsplash')
+        .subscribe((images) => (this.unsplashImages = images));
     });
   }
 }
