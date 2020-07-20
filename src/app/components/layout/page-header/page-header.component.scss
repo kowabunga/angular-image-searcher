@@ -1,6 +1,5 @@
 .navbar {
   &-head {
-    background-color: #4c87f5;
     width: 100%;
     display: flex;
     align-items: center;
@@ -8,16 +7,17 @@
     height: 5rem;
     font-size: 1.5rem;
     z-index: 100;
-  }
+    box-shadow: 0 0 5px #4c87f5;
+    background-color: rgb(255, 255, 255);
 
-  &-ul {
-    display: flex;
-    list-style-type: none;
-    width: 80%;
-
-    li a {
+    .link {
       text-decoration: none;
-      color: #fff;
+      color: #333;
+      transition: 0.3s ease-in;
+
+      &:hover {
+        color: #4c87f5;
+      }
     }
   }
 }

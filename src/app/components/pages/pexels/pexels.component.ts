@@ -10,6 +10,7 @@ import { ImageStorageService } from 'src/app/services/image-storage.service';
 })
 export class PexelsComponent implements OnInit {
   pexelsImages: Image[];
+  queryString: string;
 
   constructor(
     private pexels: PexelsApiService,
@@ -17,19 +18,35 @@ export class PexelsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Subscribe to image array changes in image storage service and load said images into component image array
     this.imageStorage
       .getImages('pexels')
       .subscribe((images) => (this.pexelsImages = images));
+
+    this.doSearch();
   }
 
   onSearch(query): void {
-    this.pexels.getPexelImages(query).subscribe((images) => {
-      console.log(images);
-      const imageArr = images.photos.map((image) => new Image(image, 'pexels'));
-      this.imageStorage.addImages(imageArr, 'pexels');
-      this.imageStorage
-        .getImages('pexels')
-        .subscribe((images) => (this.pexelsImages = images));
+    this.doSearch();
+  }
+
+  doSearch(): void {
+    this.imageStorage.getQueryString().subscribe((query) => {
+      if (query) {
+        this.queryString = query;
+        this.getImages(this.queryString);
+      }
     });
+  }
+
+  getImages(query) {
+    if (query !== true) {
+      this.pexels.getPexelImages(query).subscribe((images) => {
+        const imageArr = images.photos.map(
+          (image) => new Image(image, 'pexels')
+        );
+        this.imageStorage.addImages(imageArr, 'pexels');
+      });
+    }
   }
 }

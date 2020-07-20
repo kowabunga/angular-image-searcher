@@ -6,11 +6,21 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root',
 })
 export class ImageStorageService {
+  queryString: string;
   pexelsImages: Image[] = [];
   pixabayImages: Image[] = [];
   unsplashImages: Image[] = [];
 
   constructor() {}
+
+  setQueryString(query: string): void {
+    this.queryString = query;
+  }
+
+  getQueryString(): Observable<string> {
+    console.log(this.queryString);
+    return of(this.queryString);
+  }
 
   addImages(images: Image[], type: string) {
     if (type === 'pexels') {
@@ -30,5 +40,11 @@ export class ImageStorageService {
     } else if (type === 'unsplash') {
       return of(this.unsplashImages);
     }
+  }
+
+  clearImages(): void {
+    this.pexelsImages = [];
+    this.pixabayImages = [];
+    this.unsplashImages = [];
   }
 }

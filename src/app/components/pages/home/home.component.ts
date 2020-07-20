@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { ImageStorageService } from 'src/app/services/image-storage.service';
 
 @Component({
   selector: 'app-home',
@@ -6,12 +8,18 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  // @Input() query: string;
   isHome: boolean = true;
-  constructor() {}
+  constructor(
+    private imageStorage: ImageStorageService,
+    private router: Router
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.imageStorage.clearImages();
+  }
 
-  handleClick(e) {
-    console.log('Clicked');
+  onSearch(query) {
+    this.router.navigate(['/pexels']);
   }
 }

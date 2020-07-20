@@ -1,9 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
-import { PexelsApiService } from '../../services/pexels-api.service';
-import { UnsplashApiService } from '../../services/unsplash-api.service';
-import { PixabayApiService } from '../../services/pixabay-api.service';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { ImageStorageService } from 'src/app/services/image-storage.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -12,21 +9,17 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 })
 export class SearchBarComponent implements OnInit {
   @Input() isHome;
-  @Output() query: EventEmitter<string> = new EventEmitter();
+  @Output() query: EventEmitter<boolean> = new EventEmitter();
 
   faSearch = faSearch; // Font awesome icon
   searchParam: string = '';
 
-  constructor(
-    private pexels: PexelsApiService,
-    private unsplash: UnsplashApiService,
-    private pixabay: PixabayApiService,
-    private router: Router
-  ) {}
+  constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {}
 
-  onSubmit(queryValue) {
-    if (queryValue.length > 0) this.query.emit(queryValue);
+  onSubmit(queryValue): void {
+    this.imageStorage.setQueryString(queryValue);
+    if (queryValue.length > 0) this.query.emit(true);
   }
 }

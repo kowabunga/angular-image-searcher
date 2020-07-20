@@ -10,6 +10,7 @@ import { ImageStorageService } from 'src/app/services/image-storage.service';
 })
 export class UnsplashComponent implements OnInit {
   unsplashImages: Image[];
+  queryString: string;
 
   constructor(
     private unsplash: UnsplashApiService,
@@ -17,21 +18,35 @@ export class UnsplashComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Subscribe to image array changes in image storage service and load said images into component image array
     this.imageStorage
       .getImages('unsplash')
       .subscribe((images) => (this.unsplashImages = images));
+
+    this.doSearch();
   }
 
   onSearch(query): void {
-    this.unsplash.getUnsplashImages(query).subscribe((images) => {
-      console.log(images);
-      const imageArr = images.results.map(
-        (image) => new Image(image, 'unsplash')
-      );
-      this.imageStorage.addImages(imageArr, 'unsplash');
-      this.imageStorage
-        .getImages('unsplash')
-        .subscribe((images) => (this.unsplashImages = images));
+    this.doSearch();
+  }
+
+  doSearch(): void {
+    this.imageStorage.getQueryString().subscribe((query) => {
+      if (query) {
+        this.queryString = query;
+        this.getImages(this.queryString);
+      }
     });
+  }
+
+  getImages(query) {
+    if (query !== true) {
+      this.unsplash.getUnsplashImages(query).subscribe((images) => {
+        const imageArr = images.results.map(
+          (image) => new Image(image, 'unsplash')
+        );
+        this.imageStorage.addImages(imageArr, 'unsplash');
+      });
+    }
   }
 }
