@@ -8,7 +8,7 @@ import { Observable, of, BehaviorSubject } from 'rxjs';
 export class ImageStorageService {
   private query = new BehaviorSubject('');
   queryString = this.query.asObservable();
-  
+
   pexelsImages: Image[] = [];
   pixabayImages: Image[] = [];
   unsplashImages: Image[] = [];
@@ -39,9 +39,13 @@ export class ImageStorageService {
     }
   }
 
-  clearImages(): void {
-    this.pexelsImages = [];
-    this.pixabayImages = [];
-    this.unsplashImages = [];
+  clearImages(type: string): void {
+    if (type === 'pexels') {
+      this.pexelsImages = [];
+    } else if (type === 'pixabay') {
+      this.pixabayImages = [];
+    } else if (type === 'unsplash') {
+      this.unsplashImages = [];
+    }
   }
 }
