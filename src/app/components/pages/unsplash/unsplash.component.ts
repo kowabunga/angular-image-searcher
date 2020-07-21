@@ -15,6 +15,7 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   // Not sure if entirely needed, but putting just in case
   unsubscribe = new Subject<void>();
 
+  getQueryString: any;
   unsplashImages: Image[];
   queryString: string;
 
@@ -30,37 +31,36 @@ export class UnsplashComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((images) => (this.unsplashImages = images));
 
-    this.doSearch();
+    // Subscribe to query string behaviorsubject to get constant update of latest query value
+    this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
+      console.log(query);
+      this.queryString = query;
+    });
+
+    if (this.queryString) {
+      this.getImages(this.queryString);
+    }
   }
 
   ngOnDestroy(): void {
+    this.getQueryString.unsubscribe();
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
 
   onSearch(query): void {
-    this.doSearch();
-  }
-
-  doSearch(): void {
-    this.imageStorage
-      .getQueryString()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((query) => {
-        if (query) this.getImages(query);
-      });
+    console.log(this.queryString);
+    this.getImages(this.queryString);
   }
 
   getImages(query) {
     if (query !== true) {
-      this.unsplash
-        .getUnsplashImages(query)
-        .subscribe((images) => {
-          const imageArr = images.results.map(
-            (image) => new Image(image, 'unsplash')
-          );
-          this.imageStorage.addImages(imageArr, 'unsplash');
-        });
+      this.unsplash.getUnsplashImages(query).subscribe((images) => {
+        const imageArr = images.results.map(
+          (image) => new Image(image, 'unsplash')
+        );
+        this.imageStorage.addImages(imageArr, 'unsplash');
+      });
     }
   }
 }

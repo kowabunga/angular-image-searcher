@@ -16,6 +16,7 @@ export class PexelsComponent implements OnInit, OnDestroy {
   unsubscribe = new Subject<void>();
 
   pexelsImages: Image[];
+  getQueryString: any;
   queryString: string;
 
   constructor(
@@ -30,25 +31,26 @@ export class PexelsComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((images) => (this.pexelsImages = images));
 
-    this.doSearch();
+    // Subscribe to query string behaviorsubject to get constant update of latest query value
+    this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
+      console.log(query);
+      this.queryString = query;
+    });
+
+     if (this.queryString) {
+       this.getImages(this.queryString);
+     }
   }
 
   ngOnDestroy(): void {
+    this.getQueryString.unsubscribe();
     this.unsubscribe.next();
     this.unsubscribe.complete();
   }
 
+  // @TODO get rid of emit - probably not necessary
   onSearch(query): void {
-    this.doSearch();
-  }
-
-  doSearch(): void {
-    this.imageStorage
-      .getQueryString()
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((query) => {
-        if (query) this.getImages(query);
-      });
+    console.log(this.queryString);
   }
 
   getImages(query) {

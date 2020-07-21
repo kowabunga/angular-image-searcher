@@ -1,25 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Image } from '../models/image';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ImageStorageService {
-  queryString: string;
+  private query = new BehaviorSubject('');
+  queryString = this.query.asObservable();
+  
   pexelsImages: Image[] = [];
   pixabayImages: Image[] = [];
   unsplashImages: Image[] = [];
 
   constructor() {}
 
-  setQueryString(query: string): void {
-    this.queryString = query;
-  }
-
-  getQueryString(): Observable<string> {
-    console.log(this.queryString);
-    return of(this.queryString);
+  setQueryString(query: string) {
+    this.query.next(query);
   }
 
   addImages(images: Image[], type: string) {
