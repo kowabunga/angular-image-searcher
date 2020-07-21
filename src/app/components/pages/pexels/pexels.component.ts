@@ -1,4 +1,4 @@
-import { Component, OnInit, onDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Image } from '../../../models/image';
 import { PexelsApiService } from '../../../services/pexels-api.service';
 import { ImageStorageService } from 'src/app/services/image-storage.service';
@@ -10,7 +10,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './pexels.component.html',
   styleUrls: ['./pexels.component.scss'],
 })
-export class PexelsComponent implements OnInit {
+export class PexelsComponent implements OnInit, OnDestroy {
   // Ensuring cleanup of subscriptions when component is destroyed
   // Not sure if entirely needed, but putting just in case
   unsubscribe = new Subject<void>();
