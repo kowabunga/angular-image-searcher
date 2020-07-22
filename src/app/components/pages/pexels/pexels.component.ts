@@ -11,56 +11,35 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./pexels.component.scss'],
 })
 export class PexelsComponent implements OnInit, OnDestroy {
-  // Ensuring cleanup of subscriptions when component is destroyed
-  // Not sure if entirely needed, but putting just in case
-  unsubscribe = new Subject<void>();
-
   pexelsImages: Image[];
   getQueryString: any;
   queryString: string;
+  getImages: any;
 
-  constructor(
-    private pexels: PexelsApiService,
-    private imageStorage: ImageStorageService
-  ) {}
+  constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
     // Subscribe to image array changes in image storage service and load said images into component image array
-    this.imageStorage
+    this.getImages = this.imageStorage
       .getImages('pexels')
-      .pipe(takeUntil(this.unsubscribe))
       .subscribe((images) => (this.pexelsImages = images));
 
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
-      console.log(query);
+      if (query !== '') this.imageStorage.getImagesFromApi(query, 'pexels');
+
       this.queryString = query;
     });
-
-     if (this.queryString) {
-       this.getImages(this.queryString);
-     }
   }
 
   ngOnDestroy(): void {
     this.getQueryString.unsubscribe();
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
+    this.getImages.unsubscribe();
   }
 
   // @TODO get rid of emit - probably not necessary
   onSearch(query): void {
     console.log(this.queryString);
-  }
-
-  getImages(query) {
-    if (query !== true) {
-      this.pexels.getPexelImages(query).subscribe((images) => {
-        const imageArr = images.photos.map(
-          (image) => new Image(image, 'pexels')
-        );
-        this.imageStorage.addImages(imageArr, 'pexels');
-      });
-    }
+    this.imageStorage.getImagesFromApi(this.queryString, 'pexels');
   }
 }

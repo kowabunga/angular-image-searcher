@@ -11,56 +11,34 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./pixabay.component.scss'],
 })
 export class PixabayComponent implements OnInit, OnDestroy {
-  // Ensuring cleanup of subscriptions when component is destroyed
-  // Not sure if entirely needed, but putting just in case
-  unsubscribe = new Subject<void>();
-
-  getQueryString: any;
   pixabayImages: Image[];
+  getQueryString: any;
   queryString: string;
+  getImages: any;
 
-  constructor(
-    private pixabay: PixabayApiService,
-    private imageStorage: ImageStorageService
-  ) {}
+  constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
     // Subscribe to image array changes in image storage service and load said images into component image array
-    this.imageStorage
+    this.getImages = this.imageStorage
       .getImages('pixabay')
-      .pipe(takeUntil(this.unsubscribe))
       .subscribe((images) => (this.pixabayImages = images));
 
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
-      console.log(query);
+      if (query !== '') this.imageStorage.getImagesFromApi(query, 'pixabay');
+
       this.queryString = query;
     });
-
-    if (this.queryString) {
-      this.getImages(this.queryString);
-    }
   }
 
   ngOnDestroy(): void {
     this.getQueryString.unsubscribe();
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
+    this.getImages.unsubscribe();
   }
 
   onSearch(query): void {
     console.log(this.queryString);
-    this.getImages(this.queryString);
-  }
-
-  getImages(query) {
-    if (query !== true) {
-      this.pixabay.getPixabayImages(query).subscribe((images) => {
-        const imageArr = images.hits.map(
-          (image) => new Image(image, 'pixabay')
-        );
-        this.imageStorage.addImages(imageArr, 'pixabay');
-      });
-    }
+    this.imageStorage.getImagesFromApi(this.queryString, 'pixabay');
   }
 }
