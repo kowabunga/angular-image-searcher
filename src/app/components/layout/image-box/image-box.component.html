@@ -1,9 +1,9 @@
 <!-- Three kinds of images, therefore three image boxe types -->
 
-<div class="image-box">
-  <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
+<!-- <div class="image-box">
+  <img [src]="image.imageSmall" alt="small image" class="image-box-image" /> -->
 
-  <!-- Pexels Image -->
+<!-- Pexels Image
   <div class="image-info" *ngIf="type === 'pexels'">
     <div class="image-info-information">
       <a [href]="image.pageUrl" target="_blank" rel="noopener noreferrer"
@@ -33,17 +33,17 @@
         />
       </a>
     </div>
-  </div>
+  </div> -->
 
-  <!-- Pixabay Image -->
-  <div class="image-info" *ngIf="type === 'pixabay'">
+<!-- Pixabay Image -->
+<!-- <div class="image-info" *ngIf="type === 'pixabay'">
     <div class="image-info-information">
       <a href="{{ image.pageUrl }}" target="_blank" rel="noopener noreferrer"
         >Photo</a
       >
       taken by
       <a
-        href="https://pixabay.com/users/{{ image.photographer }} "
+        href="{{ image.photographerUrl }}"
         alt="Photographer page link"
         target="_blank"
         rel="noopener noreferrer"
@@ -67,7 +67,7 @@
     </div>
   </div>
 
-  <!-- Unsplash Image -->
+  Unsplash Image
   <div class="image-info" *ngIf="type === 'unsplash'">
     <div class="image-info-information">
       <a href="{{ image.pageUrl }}" target="_blank" rel="noopener noreferrer"
@@ -81,7 +81,7 @@
         rel="noopener noreferrer"
         >{{ image.photographer }}</a
       >
-      on Unsplash.
+      on Pixabay.
     </div>
     <br />
     <div class="image-info-attribution-unsplash-link">
@@ -94,5 +94,17 @@
         Unsplash
       </a>
     </div>
-  </div>
+  </div> -->
+<!-- </div> -->
+
+<div class="image-pexels" *ngIf="type === 'pexels'">
+  <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
+</div>
+
+<div class="image-pixabay" *ngIf="type === 'pixabay'">
+  <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
+</div>
+
+<div class="image-unsplash" *ngIf="type === 'unsplash'">
+  <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
 </div>

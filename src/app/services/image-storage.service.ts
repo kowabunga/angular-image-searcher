@@ -30,6 +30,7 @@ export class ImageStorageService {
     switch (type) {
       case 'pexels':
         this.pexels.getPexelImages(query).subscribe((images: any) => {
+          console.log(images);
           const imageArr = images.photos.map(
             (image) => new Image(image, 'pexels')
           );
@@ -38,8 +39,8 @@ export class ImageStorageService {
         break;
 
       case 'pixabay':
-        console.log('I RAN');
         this.pixabay.getPixabayImages(query).subscribe((images: any) => {
+          console.log(images);
           const imageArr = images.hits.map(
             (image) => new Image(image, 'pixabay')
           );
@@ -49,6 +50,7 @@ export class ImageStorageService {
 
       case 'unsplash':
         this.unsplash.getUnsplashImages(query).subscribe((images: any) => {
+          console.log(images);
           const imageArr = images.results.map(
             (image) => new Image(image, 'unsplash')
           );
@@ -109,6 +111,7 @@ export class ImageStorageService {
       case 'unsplash':
         this.unsplashImages = [];
         break;
+
       case 'all':
         this.pexelsImages = [];
         this.pixabayImages = [];

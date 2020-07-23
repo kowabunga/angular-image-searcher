@@ -4,7 +4,7 @@ export class Image {
   imageLarge: string;
   pageUrl: string;
   photographer: string;
-  photographerUrl?: string;
+  photographerUrl: string;
 
   constructor(image, type) {
     switch (type) {
@@ -18,10 +18,11 @@ export class Image {
         break;
       case 'pixabay':
         this.id = image.id;
-        this.imageSmall = image.webformatURL;
+        this.imageSmall = this.changeWebFormatUrl(image.webformatURL);
         this.imageLarge = image.largeImageURL;
         this.pageUrl = image.pageURL;
         this.photographer = image.user;
+        this.photographerUrl = `https://pixabay.com/users/${image.user}`;
         break;
       //pixabay does not provide a link to the photographers page in its api
       case 'unsplash':
@@ -35,5 +36,10 @@ export class Image {
       default:
         break;
     }
+  }
+
+  // Changes webformat image from default 640px height to 340px height
+  changeWebFormatUrl(url: string): string {
+    return url.replace('_640', '_340');
   }
 }
