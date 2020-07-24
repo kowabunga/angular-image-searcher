@@ -1,110 +1,34 @@
-<!-- Three kinds of images, therefore three image boxe types -->
+<!-- Three kinds of images, three different image boxes -->
 
-<!-- <div class="image-box">
-  <img [src]="image.imageSmall" alt="small image" class="image-box-image" /> -->
-
-<!-- Pexels Image
-  <div class="image-info" *ngIf="type === 'pexels'">
-    <div class="image-info-information">
-      <a [href]="image.pageUrl" target="_blank" rel="noopener noreferrer"
-        >Photo</a
-      >
-      taken by
-      <a
-        href="{{ image.photographerUrl }}"
-        alt="Photographer page link"
-        target="_blank"
-        rel="noopener noreferrer"
-        >{{ image.photographer }}</a
-      >
-      on Pexels
-    </div>
-    <br />
-    <div class="image-info-attribution">
-      <a
-        class="image-info-attribution-pexel-link"
-        href="https://www.pexels.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img
-          [src]="'https://images.pexels.com/lib/api/pexels.png'"
-          alt="Pexels logo"
-        />
-      </a>
-    </div>
-  </div> -->
-
-<!-- Pixabay Image -->
-<!-- <div class="image-info" *ngIf="type === 'pixabay'">
-    <div class="image-info-information">
-      <a href="{{ image.pageUrl }}" target="_blank" rel="noopener noreferrer"
-        >Photo</a
-      >
-      taken by
-      <a
-        href="{{ image.photographerUrl }}"
-        alt="Photographer page link"
-        target="_blank"
-        rel="noopener noreferrer"
-        >{{ image.photographer }}</a
-      >
-      on Pixabay.
-    </div>
-    <br />
-    <div class="image-info-attribution">
-      <a
-        class="image-info-attribution-pexel-link"
-        href="https://www.pixabay.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <img
-          [src]="'../../../../../assets/img/pixabay_logo.jpg'"
-          alt="Pexels logo"
-        />
-      </a>
-    </div>
+<!-- Pexels -->
+<a
+  routerLink="/image/{{ type }}/{{ image.id }}"
+  [state]="{ image: image, type: type }"
+  *ngIf="type === 'pexels'"
+>
+  <div class="image-pexels">
+    <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
   </div>
+</a>
 
-  Unsplash Image
-  <div class="image-info" *ngIf="type === 'unsplash'">
-    <div class="image-info-information">
-      <a href="{{ image.pageUrl }}" target="_blank" rel="noopener noreferrer"
-        >Photo</a
-      >
-      taken by
-      <a
-        href="{{ image.photographerUrl }}"
-        alt="Photographer page link"
-        target="_blank"
-        rel="noopener noreferrer"
-        >{{ image.photographer }}</a
-      >
-      on Pixabay.
-    </div>
-    <br />
-    <div class="image-info-attribution-unsplash-link">
-      Photos provided by:
-      <a
-        href="https://www.unsplash.com"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Unsplash
-      </a>
-    </div>
-  </div> -->
-<!-- </div> -->
+<!-- Pixabay -->
+<a
+  routerLink="/image/{{ type }}/{{ image.id }}"
+  [state]="{ image: image, type: type }"
+  *ngIf="type === 'pixabay'"
+>
+  <div class="image-pixabay">
+    <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
+  </div>
+</a>
 
-<div class="image-pexels" *ngIf="type === 'pexels'">
-  <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
-</div>
-
-<div class="image-pixabay" *ngIf="type === 'pixabay'">
-  <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
-</div>
-
-<div class="image-unsplash" *ngIf="type === 'unsplash'">
-  <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
-</div>
+<!-- Unsplash -->
+<a
+  routerLink="/image/{{ type }}/{{ image.id }}"
+  [state]="{ image: image, type: type }"
+  *ngIf="type === 'unsplash'"
+>
+  <div class="image-unsplash">
+    <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
+  </div>
+</a>

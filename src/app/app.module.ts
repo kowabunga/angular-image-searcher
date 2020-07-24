@@ -15,6 +15,8 @@ import { PixabayComponent } from './components/pages/pixabay/pixabay.component';
 import { UnsplashComponent } from './components/pages/unsplash/unsplash.component';
 import { SearchBarComponent } from './components/search-bar/search-bar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ImagePageComponent } from './components/pages/image-page/image-page.component';
+import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     PixabayComponent,
     UnsplashComponent,
     SearchBarComponent,
+    ImagePageComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,

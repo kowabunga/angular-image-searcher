@@ -13,7 +13,6 @@ export class PixabayApiService {
   constructor(private http: HttpClient) {}
 
   getPixabayImages(query: string): Observable<any> {
-    //@TODO webformaturl height/width
     return this.http.get<any>(
       `https://pixabay.com/api/?key=${environment.PIXABAY_API}&q=${query}&image_type=photo&pretty=true&per_page=30`
     );

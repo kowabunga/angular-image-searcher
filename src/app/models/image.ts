@@ -5,11 +5,16 @@ export class Image {
   pageUrl: string;
   photographer: string;
   photographerUrl: string;
+  likes?: number;
+  downloads?: number;
+  favorites?: number;
+  tagStr: string;
+  tagArr?: [];
 
   constructor(image, type) {
     switch (type) {
       case 'pexels':
-        this.id = image.id;
+        this.id = image.id.toString();
         this.imageSmall = image.src.medium;
         this.imageLarge = image.src.original;
         this.pageUrl = image.url;
@@ -17,21 +22,30 @@ export class Image {
         this.photographerUrl = image.photographer_url;
         break;
       case 'pixabay':
-        this.id = image.id;
+        //pixabay has:
+        //comments,downloads,favorites,likes,
+        this.id = image.id.toString();
         this.imageSmall = this.changeWebFormatUrl(image.webformatURL);
         this.imageLarge = image.largeImageURL;
         this.pageUrl = image.pageURL;
         this.photographer = image.user;
         this.photographerUrl = `https://pixabay.com/users/${image.user}`;
+        this.downloads = image.downloads;
+        this.favorites = image.favorites;
+        this.likes = image.likes;
+        this.tagStr = image.tags;
         break;
-      //pixabay does not provide a link to the photographers page in its api
       case 'unsplash':
-        this.id = image.id;
+        //unsplash has
+        // likes, tags,
+        this.id = image.id.toString();
         this.imageSmall = image.urls.small;
         this.imageLarge = image.urls.raw;
         this.pageUrl = image.links.html;
         this.photographer = image.user.name;
         this.photographerUrl = image.user.links.html;
+        this.likes = image.likes;
+        this.tagArr = image.tagArr;
         break;
       default:
         break;

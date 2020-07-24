@@ -1,0 +1,110 @@
+<button class="btn-link" routerLink="/pexels" *ngIf="type === 'pexels'">
+  <fa-icon class="icon" [icon]="faArrowCircleLeft"></fa-icon>Back to Images
+</button>
+<button class="btn-link" routerLink="/pixabay" *ngIf="type === 'pixabay'">
+  <fa-icon class="icon" [icon]="faArrowCircleLeft"></fa-icon>Back to Images
+</button>
+<button class="btn-link" routerLink="/unsplash" *ngIf="type === 'unsplash'">
+  <fa-icon class="icon" [icon]="faArrowCircleLeft"></fa-icon>Back to Images
+</button>
+
+<!-- Pexels image page -->
+<div class="image" *ngIf="type === 'pexels'">
+  <div class="image-pexel">
+    <img [src]="image.imageLarge" alt="" />
+  </div>
+  <div class="image-info">
+    <div class="photo-by">
+      <p>
+        Photo By:
+        <a [href]="image.photographerUrl" class="link">{{
+          image.photographer
+        }}</a>
+      </p>
+    </div>
+    <div class="photo-orig">
+      <p>
+        Original photo can be found
+        <a [href]="image.pageUrl" target="_blank" class="link">here</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Pixabay image page -->
+<div class="image" *ngIf="type === 'pixabay'">
+  <div class="image-pixabay">
+    <img [src]="image.imageLarge" alt="" />
+  </div>
+  <div class="image-info">
+    <div class="photo-by">
+      <p>
+        Photo By:
+        <a [href]="image.photographerUrl" class="link">{{
+          image.photographer
+        }}</a>
+      </p>
+    </div>
+    <div class="photo-orig">
+      <p>
+        Original photo can be found
+        <a [href]="image.pageUrl" target="_blank" class="link">here</a>
+      </p>
+    </div>
+    <div class="stats">
+      <p>Stats</p>
+      <div class="stat stat-like" data-tooltip="likes">
+        <fa-icon class="icon" [icon]="faHeart"></fa-icon> {{ image.likes }}
+      </div>
+      <div class="stat stat-download" data-tooltip="downloads">
+        <fa-icon class="icon" [icon]="faDownload"></fa-icon>
+        {{ image.downloads }}
+      </div>
+      <div class="stat stat-favorite" data-tooltip="favorites">
+        <fa-icon class="icon" [icon]="faBookmark"></fa-icon>
+        {{ image.favorites }}
+      </div>
+    </div>
+    <div class="tags">
+      <p>Tags</p>
+      <div class="tag" *ngFor="let tag of tags">
+        <fa-icon class="icon" [icon]="faTag"></fa-icon>{{ tag }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Unsplash image page -->
+<div class="image" *ngIf="type === 'unsplash'">
+  <div class="image-unsplash">
+    <img [src]="image.imageLarge" alt="" />
+  </div>
+  <div class="image-info">
+    <div class="photo-by">
+      <p>
+        Photo By:
+        <a [href]="image.photographerUrl" class="link">{{
+          image.photographer
+        }}</a>
+      </p>
+    </div>
+    <div class="photo-orig">
+      <p>
+        Original photo can be found
+        <a [href]="image.pageUrl" target="_blank" class="link">here</a>
+      </p>
+    </div>
+    <div class="stats">
+      <p>Stats</p>
+      <div class="stat stat-like" data-tooltip="likes">
+        <fa-icon class="icon" [icon]="faHeart"></fa-icon> {{ image.likes }}
+      </div>
+    </div>
+    <div class="tags">
+      <p>Tags</p>
+      <div class="tag" *ngFor="let tag of tags">
+        <fa-icon class="icon" [icon]="faTag"></fa-icon>{{ tag }}
+      </div>
+    </div>
+  </div>
+</div>
