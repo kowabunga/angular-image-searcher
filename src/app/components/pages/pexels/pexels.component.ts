@@ -4,6 +4,7 @@ import { PexelsApiService } from '../../../services/pexels-api.service';
 import { ImageStorageService } from 'src/app/services/image-storage.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-pexels',
@@ -11,7 +12,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./pexels.component.scss'],
 })
 export class PexelsComponent implements OnInit, OnDestroy {
-  pexelsImages: Image[];
+  pexelsImages: Image[] = [];
   getQueryString: any;
   queryString: string;
   getImages: any;
@@ -26,10 +27,24 @@ export class PexelsComponent implements OnInit, OnDestroy {
 
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
-      if (query !== '') this.imageStorage.getImagesFromApi(query, 'pexels');
+      if (query !== '') {
+        this.imageStorage.getImagesFromApi(query, 'pexels');
+
+        // Clear current search results in session storage on page new search
+        if (sessionStorage.getItem('pexel-images'))
+          sessionStorage.removeItem('pexel-images');
+      }
 
       this.queryString = query;
     });
+
+    // Check if image array is empty and there are items in session storage. If so, grab the items from session storage
+    if (
+      this.pexelsImages.length === 0 &&
+      sessionStorage.getItem('pexel-images') !== null
+    ) {
+      this.pexelsImages = JSON.parse(sessionStorage.getItem('pexel-images'));
+    }
   }
 
   ngOnDestroy(): void {

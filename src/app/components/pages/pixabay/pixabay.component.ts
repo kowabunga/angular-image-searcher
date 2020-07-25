@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./pixabay.component.scss'],
 })
 export class PixabayComponent implements OnInit, OnDestroy {
-  pixabayImages: Image[];
+  pixabayImages: Image[] = [];
   getQueryString: any;
   queryString: string;
   getImages: any;
@@ -26,10 +26,24 @@ export class PixabayComponent implements OnInit, OnDestroy {
 
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
-      if (query !== '') this.imageStorage.getImagesFromApi(query, 'pixabay');
+      if (query !== '') {
+        this.imageStorage.getImagesFromApi(query, 'pixabay');
+
+        // Clear current search results in session storage on page new search
+        if (sessionStorage.getItem('pixabay-images'))
+          sessionStorage.removeItem('pixabay-images');
+      }
 
       this.queryString = query;
     });
+
+    // Check if image array is empty and there are items in session storage. If so, grab the items from session storage
+    if (
+      this.pixabayImages.length === 0 &&
+      sessionStorage.getItem('pixabay-images') !== null
+    ) {
+      this.pixabayImages = JSON.parse(sessionStorage.getItem('pixabay-images'));
+    }
   }
 
   ngOnDestroy(): void {

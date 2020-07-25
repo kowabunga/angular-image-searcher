@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./unsplash.component.scss'],
 })
 export class UnsplashComponent implements OnInit, OnDestroy {
-  unsplashImages: Image[];
+  unsplashImages: Image[]=[];
   getQueryString: any;
   queryString: string;
   getImages: any;
@@ -27,9 +27,18 @@ export class UnsplashComponent implements OnInit, OnDestroy {
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
       if (query !== '') this.imageStorage.getImagesFromApi(query, 'unsplash');
-
       this.queryString = query;
     });
+
+    // Check if image array is empty and there are items in session storage. If so, grab the items from session storage
+    if (
+      this.unsplashImages.length === 0 &&
+      sessionStorage.getItem('unsplash-images') !== null
+    ) {
+      this.unsplashImages = JSON.parse(
+        sessionStorage.getItem('unsplash-images')
+      );
+    }
   }
 
   ngOnDestroy(): void {

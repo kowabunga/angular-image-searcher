@@ -24,6 +24,11 @@ export class ImageStorageService {
 
   setQueryString(query: string) {
     this.query.next(query);
+
+
+
+    if (sessionStorage.getItem('unsplash-images'))
+      sessionStorage.removeItem('unsplash-images');
   }
 
   getImagesFromApi(query: string, type: string): void {
@@ -64,17 +69,30 @@ export class ImageStorageService {
   }
 
   addImages(images: Image[], type: string): void {
+    // Add images to image array *and* add to session storage based on picture type
     switch (type) {
       case 'pexels':
         images.forEach((image) => this.pexelsImages.push(image));
+        sessionStorage.setItem(
+          'pexel-images',
+          JSON.stringify(this.pexelsImages)
+        );
         break;
 
       case 'pixabay':
         images.forEach((image) => this.pixabayImages.push(image));
+        sessionStorage.setItem(
+          'pixabay-images',
+          JSON.stringify(this.pixabayImages)
+        );
         break;
 
       case 'unsplash':
         images.forEach((image) => this.unsplashImages.push(image));
+        sessionStorage.setItem(
+          'unsplash-images',
+          JSON.stringify(this.unsplashImages)
+        );
         break;
 
       default:
