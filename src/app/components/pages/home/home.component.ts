@@ -15,10 +15,7 @@ export class HomeComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {
-    //@TODO Delete - as of now this is here for dev
-    this.imageStorage.clearImages('all');
-  }
+  ngOnInit(): void {}
 
   onSearch(query) {
     this.router.navigate(['/pexels']);

@@ -32,40 +32,42 @@ export class ImagePageComponent implements OnInit {
     console.log('ran');
     let id = this.route.snapshot.params.id;
     this.type = this.route.snapshot.params.type;
-    this.getImageFromTypeAndId(this.type, id);
+    // this.getImageFromTypeAndId(this.type, id);
   }
 
-  getImageFromTypeAndId(type: string, id: string) {
-    switch (type) {
-      case 'pexels':
-        this.imageStorage.getImages(type).subscribe((images) => {
-          console.log(images);
-          this.image = images.filter((image) => image.id === id)[0];
-        });
-        break;
+  // @TODO Add items to session storage
+  // @TODO Get items from session storage
+  // getImageFromTypeAndId(type: string, id: string) {
+  //   switch (type) {
+  //     case 'pexels':
+  //       this.imageStorage.getImages(type).subscribe((images) => {
+  //         console.log(images);
+  //         this.image = images.filter((image) => image.id === id)[0];
+  //       });
+  //       break;
 
-      case 'pixabay':
-        this.imageStorage.getImages(type).subscribe((images) => {
-          console.log(images);
+  //     case 'pixabay':
+  //       this.imageStorage.getImages(type).subscribe((images) => {
+  //         console.log(images);
 
-          this.image = images.filter((image) => image.id === id)[0];
-          this.getTags();
-        });
-        break;
+  //         this.image = images.filter((image) => image.id === id)[0];
+  //         this.getTags();
+  //       });
+  //       break;
 
-      case 'unsplash':
-        this.imageStorage.getImages(type).subscribe((images) => {
-          console.log(images);
+  //     case 'unsplash':
+  //       this.imageStorage.getImages(type).subscribe((images) => {
+  //         console.log(images);
 
-          this.image = images.filter((image) => image.id === id)[0];
-          this.getTags();
-        });
-        break;
+  //         this.image = images.filter((image) => image.id === id)[0];
+  //         this.getTags();
+  //       });
+  //       break;
 
-      default:
-        break;
-    }
-  }
+  //     default:
+  //       break;
+  //   }
+  // }
 
   getTags() {
     switch (this.type) {

@@ -11,22 +11,23 @@ import { takeUntil } from 'rxjs/operators';
   styleUrls: ['./unsplash.component.scss'],
 })
 export class UnsplashComponent implements OnInit, OnDestroy {
-  unsplashImages: Image[]=[];
-  getQueryString: any;
+  unsplashImages: Image[] = [];
   queryString: string;
+  getQueryString: any;
   getImages: any;
 
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
     // Subscribe to image array changes in image storage service and load said images into component image array
-    this.getImages = this.imageStorage
-      .getImages('unsplash')
-      .subscribe((images) => (this.unsplashImages = images));
+    this.getImages = this.imageStorage.unsplashImages.subscribe((images) => {
+      this.unsplashImages = [...this.unsplashImages, ...images];
+    });
 
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
-      if (query !== '') this.imageStorage.getImagesFromApi(query, 'unsplash');
+      this.imageStorage.getImagesFromApi(query, 'unsplash');
+
       this.queryString = query;
     });
 
@@ -44,10 +45,5 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.getQueryString.unsubscribe();
     this.getImages.unsubscribe();
-  }
-
-  onSearch(query): void {
-    console.log(this.queryString);
-    this.imageStorage.getImagesFromApi(this.queryString, 'unsplash');
   }
 }
