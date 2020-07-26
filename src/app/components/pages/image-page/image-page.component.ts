@@ -16,6 +16,7 @@ import { ImageStorageService } from 'src/app/services/image-storage.service';
 export class ImagePageComponent implements OnInit {
   type: string;
   image: Image;
+  images: Image[];
   tags: string[];
   faArrowCircleLeft = faArrowCircleLeft;
   faHeart = faHeart;
@@ -23,51 +24,47 @@ export class ImagePageComponent implements OnInit {
   faBookmark = faBookmark;
   faTag = faTag;
 
-  constructor(
-    private route: ActivatedRoute,
-    private imageStorage: ImageStorageService
-  ) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     console.log('ran');
     let id = this.route.snapshot.params.id;
     this.type = this.route.snapshot.params.type;
-    // this.getImageFromTypeAndId(this.type, id);
+    this.getImageFromTypeAndId(this.type, id);
   }
 
   // @TODO Add items to session storage
   // @TODO Get items from session storage
-  // getImageFromTypeAndId(type: string, id: string) {
-  //   switch (type) {
-  //     case 'pexels':
-  //       this.imageStorage.getImages(type).subscribe((images) => {
-  //         console.log(images);
-  //         this.image = images.filter((image) => image.id === id)[0];
-  //       });
-  //       break;
+  getImageFromTypeAndId(type: string, id: string) {
+    // We know that there should be images in session storage if we've navigated here, but we'll check each time we get here just in case
+    switch (type) {
+      case 'pexels':
+        if (sessionStorage.getItem('pexel-images') !== null)
+          this.images = JSON.parse(sessionStorage.getItem('pexel-images'));
+        this.image = this.images.filter((image) => image.id === id)[0];
+        break;
 
-  //     case 'pixabay':
-  //       this.imageStorage.getImages(type).subscribe((images) => {
-  //         console.log(images);
+      case 'pixabay':
+        if (sessionStorage.getItem('pixabay-images') !== null)
+          this.images = JSON.parse(sessionStorage.getItem('pixabay-images'));
 
-  //         this.image = images.filter((image) => image.id === id)[0];
-  //         this.getTags();
-  //       });
-  //       break;
+        this.image = this.images.filter((image) => image.id === id)[0];
+        this.getTags();
 
-  //     case 'unsplash':
-  //       this.imageStorage.getImages(type).subscribe((images) => {
-  //         console.log(images);
+        break;
 
-  //         this.image = images.filter((image) => image.id === id)[0];
-  //         this.getTags();
-  //       });
-  //       break;
+      case 'unsplash':
+        if (sessionStorage.getItem('unsplash-images') !== null)
+          this.images = JSON.parse(sessionStorage.getItem('unsplash-images'));
 
-  //     default:
-  //       break;
-  //   }
-  // }
+        this.image = this.images.filter((image) => image.id === id)[0];
+        this.getTags();
+        break;
+
+      default:
+        break;
+    }
+  }
 
   getTags() {
     switch (this.type) {

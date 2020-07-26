@@ -21,7 +21,13 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Subscribe to image array changes in image storage service and load said images into component image array
     this.getImages = this.imageStorage.unsplashImages.subscribe((images) => {
-      this.unsplashImages = [...this.unsplashImages, ...images];
+      //@TODO Old query string to compare.
+      // !If same query string, do this.
+      // this.unsplashImages = [...this.unsplashImages, ...images];
+      // !If diff query string, do this:
+      this.unsplashImages = images;
+      if (sessionStorage.getItem('unsplash-images') === null)
+        sessionStorage.setItem('unsplash-images', JSON.stringify(images));
     });
 
     // Subscribe to query string behaviorsubject to get constant update of latest query value
@@ -29,6 +35,14 @@ export class UnsplashComponent implements OnInit, OnDestroy {
       this.imageStorage.getImagesFromApi(query, 'unsplash');
 
       this.queryString = query;
+
+      // On page reload, behavior subject can return empty string (since its default value is an empty string). If so, grab the item from session storage
+      if (
+        this.queryString === '' &&
+        sessionStorage.getItem('query-string') !== null
+      )
+        this.queryString = sessionStorage.getItem('query-string');
+      console.log(this.queryString);
     });
 
     // Check if image array is empty and there are items in session storage. If so, grab the items from session storage

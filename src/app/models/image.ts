@@ -38,6 +38,7 @@ export class Image {
       case 'unsplash':
         //unsplash has
         // likes, tags,
+        console.log(image);
         this.id = image.id.toString();
         this.imageSmall = image.urls.small;
         this.imageLarge = image.urls.raw;
@@ -45,7 +46,7 @@ export class Image {
         this.photographer = image.user.name;
         this.photographerUrl = image.user.links.html;
         this.likes = image.likes;
-        this.tagArr = image.tagArr;
+        this.tagArr = image.tags;
         break;
       default:
         break;

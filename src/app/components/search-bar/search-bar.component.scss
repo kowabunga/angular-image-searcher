@@ -18,8 +18,7 @@
 
   .search-shadow {
     border-radius: 30px;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    background-color: rgb(255, 255, 255, 0.8);
 
     .search-input,
     .submit-btn {
@@ -60,9 +59,6 @@
 }
 
 @media (max-width: 590px) {
-  // .app-navbar {
-  //   width: 50%;
-  // }
   .search-form {
     width: 100%;
 

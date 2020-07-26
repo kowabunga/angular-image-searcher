@@ -5,11 +5,13 @@ import { PexelsApiService } from './pexels-api.service';
 import { PixabayApiService } from './pixabay-api.service';
 import { UnsplashApiService } from './unsplash-api.service';
 
+// @TODO Add items to session storage
+// @TODO Get items from session storage
+
 @Injectable({
   providedIn: 'root',
 })
 export class ImageStorageService {
-  private oldQuery:string='';
   private query: BehaviorSubject<string> = new BehaviorSubject('');
   queryString = this.query.asObservable();
 
@@ -29,41 +31,44 @@ export class ImageStorageService {
   ) {}
 
   setQueryString(query: string) {
+    sessionStorage.setItem('query-string', query);
     if (query !== '') this.query.next(query);
   }
 
   getImagesFromApi(query: string, type: string): void {
-    switch (type) {
-      case 'pexels':
-        console.log('GetImages Ran');
-        this.pexels.getPexelImages(query).subscribe((images: any) => {
-          const imageArr: Image[] = images.photos.map(
-            (image) => new Image(image, 'pexels')
-          );
-          this.getImages(imageArr, 'pexels');
-        });
-        break;
+    if (query !== '') {
+      switch (type) {
+        case 'pexels':
+          console.log('GetImages Ran');
+          this.pexels.getPexelImages(query).subscribe((images: any) => {
+            const imageArr: Image[] = images.photos.map(
+              (image) => new Image(image, 'pexels')
+            );
+            this.getImages(imageArr, 'pexels');
+          });
+          break;
 
-      case 'pixabay':
-        this.pixabay.getPixabayImages(query).subscribe((images: any) => {
-          const imageArr: Image[] = images.hits.map(
-            (image) => new Image(image, 'pixabay')
-          );
-          this.getImages(imageArr, 'pixabay');
-        });
-        break;
+        case 'pixabay':
+          this.pixabay.getPixabayImages(query).subscribe((images: any) => {
+            const imageArr: Image[] = images.hits.map(
+              (image) => new Image(image, 'pixabay')
+            );
+            this.getImages(imageArr, 'pixabay');
+          });
+          break;
 
-      case 'unsplash':
-        this.unsplash.getUnsplashImages(query).subscribe((images: any) => {
-          const imageArr: Image[] = images.results.map(
-            (image) => new Image(image, 'unsplash')
-          );
-          this.getImages(imageArr, 'unsplash');
-        });
-        break;
+        case 'unsplash':
+          this.unsplash.getUnsplashImages(query).subscribe((images: any) => {
+            const imageArr: Image[] = images.results.map(
+              (image) => new Image(image, 'unsplash')
+            );
+            this.getImages(imageArr, 'unsplash');
+          });
+          break;
 
-      default:
-        break;
+        default:
+          break;
+      }
     }
   }
 
