@@ -1,5 +1,6 @@
 export class Image {
   id: string;
+  type: string;
   imageSmall: string;
   imageLarge: string;
   pageUrl: string;
@@ -15,6 +16,7 @@ export class Image {
     switch (type) {
       case 'pexels':
         this.id = image.id.toString();
+        this.type = type;
         this.imageSmall = image.src.medium;
         this.imageLarge = image.src.original;
         this.pageUrl = image.url;
@@ -25,6 +27,7 @@ export class Image {
         //pixabay has:
         //comments,downloads,favorites,likes,
         this.id = image.id.toString();
+        this.type = type;
         this.imageSmall = this.changeWebFormatUrl(image.webformatURL);
         this.imageLarge = image.largeImageURL;
         this.pageUrl = image.pageURL;
@@ -38,8 +41,8 @@ export class Image {
       case 'unsplash':
         //unsplash has
         // likes, tags,
-        console.log(image);
         this.id = image.id.toString();
+        this.type = type;
         this.imageSmall = image.urls.small;
         this.imageLarge = image.urls.raw;
         this.pageUrl = image.links.html;

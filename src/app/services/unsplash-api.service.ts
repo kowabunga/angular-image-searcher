@@ -12,9 +12,9 @@ export class UnsplashApiService {
 
   constructor(private http: HttpClient) {}
 
-  getUnsplashImages(query: string): Observable<any> {
+  getUnsplashImages(query: string, perPage: number): Observable<any> {
     return this.http.get<any>(
-      `https://api.unsplash.com/search/photos/?client_id=${environment.UNSPLASH_API}&query=${query}&page=1&per_page=30`
+      `https://api.unsplash.com/search/photos/?client_id=${environment.UNSPLASH_API}&query=${query}&page=1&per_page=${perPage}`
     );
   }
 }

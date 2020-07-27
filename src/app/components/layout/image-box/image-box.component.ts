@@ -9,6 +9,7 @@ import { Image } from 'src/app/models/image';
 export class ImageBoxComponent implements OnInit {
   @Input() image: Image;
   @Input() type: string;
+  @Input() prevLocation: string;
 
   constructor() {}
 

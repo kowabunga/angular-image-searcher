@@ -35,35 +35,41 @@ export class ImageStorageService {
     if (query !== '') this.query.next(query);
   }
 
-  getImagesFromApi(query: string, type: string): void {
+  getImagesFromApi(query: string, type: string, perPage = 30): void {
     if (query !== '') {
       switch (type) {
         case 'pexels':
           console.log('GetImages Ran');
-          this.pexels.getPexelImages(query).subscribe((images: any) => {
-            const imageArr: Image[] = images.photos.map(
-              (image) => new Image(image, 'pexels')
-            );
-            this.getImages(imageArr, 'pexels');
-          });
+          this.pexels
+            .getPexelImages(query, perPage)
+            .subscribe((images: any) => {
+              const imageArr: Image[] = images.photos.map(
+                (image) => new Image(image, 'pexels')
+              );
+              this.getImages(imageArr, 'pexels');
+            });
           break;
 
         case 'pixabay':
-          this.pixabay.getPixabayImages(query).subscribe((images: any) => {
-            const imageArr: Image[] = images.hits.map(
-              (image) => new Image(image, 'pixabay')
-            );
-            this.getImages(imageArr, 'pixabay');
-          });
+          this.pixabay
+            .getPixabayImages(query, perPage)
+            .subscribe((images: any) => {
+              const imageArr: Image[] = images.hits.map(
+                (image) => new Image(image, 'pixabay')
+              );
+              this.getImages(imageArr, 'pixabay');
+            });
           break;
 
         case 'unsplash':
-          this.unsplash.getUnsplashImages(query).subscribe((images: any) => {
-            const imageArr: Image[] = images.results.map(
-              (image) => new Image(image, 'unsplash')
-            );
-            this.getImages(imageArr, 'unsplash');
-          });
+          this.unsplash
+            .getUnsplashImages(query, perPage)
+            .subscribe((images: any) => {
+              const imageArr: Image[] = images.results.map(
+                (image) => new Image(image, 'unsplash')
+              );
+              this.getImages(imageArr, 'unsplash');
+            });
           break;
 
         default:

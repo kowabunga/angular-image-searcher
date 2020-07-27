@@ -15,9 +15,9 @@ const httpOptions = {
 export class PexelsApiService {
   constructor(private http: HttpClient) {}
 
-  getPexelImages(query: string): Observable<any> {
+  getPexelImages(query: string, perPage:number): Observable<any> {
     return this.http.get<any>(
-      `https://api.pexels.com/v1/search?query=${query}&per_page=30`,
+      `https://api.pexels.com/v1/search?query=${query}&per_page=${perPage}`,
       httpOptions
     );
   }

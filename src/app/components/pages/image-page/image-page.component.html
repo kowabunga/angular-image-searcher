@@ -1,10 +1,25 @@
-<button class="btn-link" routerLink="/pexels" *ngIf="type === 'pexels'">
+<button class="btn-link" routerLink="/" *ngIf="prevLocation === 'home'">
   <fa-icon class="icon" [icon]="faArrowCircleLeft"></fa-icon>Back to Images
 </button>
-<button class="btn-link" routerLink="/pixabay" *ngIf="type === 'pixabay'">
+<button
+  class="btn-link"
+  routerLink="/pexels"
+  *ngIf="type === 'pexels' && prevLocation === undefined"
+>
   <fa-icon class="icon" [icon]="faArrowCircleLeft"></fa-icon>Back to Images
 </button>
-<button class="btn-link" routerLink="/unsplash" *ngIf="type === 'unsplash'">
+<button
+  class="btn-link"
+  routerLink="/pixabay"
+  *ngIf="type === 'pixabay' && prevLocation === undefined"
+>
+  <fa-icon class="icon" [icon]="faArrowCircleLeft"></fa-icon>Back to Images
+</button>
+<button
+  class="btn-link"
+  routerLink="/unsplash"
+  *ngIf="type === 'unsplash' && prevLocation === undefined"
+>
   <fa-icon class="icon" [icon]="faArrowCircleLeft"></fa-icon>Back to Images
 </button>
 

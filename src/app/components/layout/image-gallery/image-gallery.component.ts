@@ -8,9 +8,10 @@ import { Image } from '../../../models/image';
 })
 export class ImageGalleryComponent implements OnInit {
   @Input() gallery: Image[];
-  @Input() type:string;
+  @Input() prevLocation: string;
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 }

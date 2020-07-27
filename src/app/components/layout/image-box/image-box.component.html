@@ -2,9 +2,9 @@
 
 <!-- Pexels -->
 <a
-  routerLink="/image/{{ type }}/{{ image.id }}"
-  [state]="{ image: image, type: type }"
-  *ngIf="type === 'pexels'"
+  routerLink="/image/{{ image.type }}/{{ image.id }}"
+  [state]="{ image: image, prevLocation: prevLocation }"
+  *ngIf="image.type === 'pexels'"
 >
   <div class="image-pexels">
     <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
@@ -13,9 +13,9 @@
 
 <!-- Pixabay -->
 <a
-  routerLink="/image/{{ type }}/{{ image.id }}"
-  [state]="{ image: image, type: type }"
-  *ngIf="type === 'pixabay'"
+  routerLink="/image/{{ image.type }}/{{ image.id }}"
+  [state]="{ image: image, prevLocation: prevLocation }"
+  *ngIf="image.type === 'pixabay'"
 >
   <div class="image-pixabay">
     <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
@@ -24,9 +24,9 @@
 
 <!-- Unsplash -->
 <a
-  routerLink="/image/{{ type }}/{{ image.id }}"
-  [state]="{ image: image, type: type }"
-  *ngIf="type === 'unsplash'"
+  routerLink="/image/{{ image.type }}/{{ image.id }}"
+  [state]="{ image: image, prevLocation: prevLocation }"
+  *ngIf="image.type === 'unsplash'"
 >
   <div class="image-unsplash">
     <img [src]="image.imageSmall" alt="small image" class="image-box-image" />

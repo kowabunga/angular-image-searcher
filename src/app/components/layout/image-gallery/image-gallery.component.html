@@ -1,5 +1,8 @@
 <div class="gallery">
   <ng-container *ngFor="let image of gallery">
-    <app-image-box [image]="image" [type]="type"></app-image-box>
+    <app-image-box
+      [image]="image"
+      [prevLocation]="prevLocation"
+    ></app-image-box>
   </ng-container>
 </div>
