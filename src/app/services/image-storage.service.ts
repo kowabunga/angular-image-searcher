@@ -5,9 +5,6 @@ import { PexelsApiService } from './pexels-api.service';
 import { PixabayApiService } from './pixabay-api.service';
 import { UnsplashApiService } from './unsplash-api.service';
 
-// @TODO Add items to session storage
-// @TODO Get items from session storage
-
 @Injectable({
   providedIn: 'root',
 })
@@ -35,13 +32,18 @@ export class ImageStorageService {
     if (query !== '') this.query.next(query);
   }
 
-  getImagesFromApi(query: string, type: string, perPage = 30): void {
+  getImagesFromApi(
+    query: string,
+    type: string,
+    perPage = 30,
+    page: number = 1
+  ): void {
     if (query !== '') {
       switch (type) {
         case 'pexels':
           console.log('GetImages Ran');
           this.pexels
-            .getPexelImages(query, perPage)
+            .getPexelImages(query, perPage, page)
             .subscribe((images: any) => {
               const imageArr: Image[] = images.photos.map(
                 (image) => new Image(image, 'pexels')
@@ -52,7 +54,7 @@ export class ImageStorageService {
 
         case 'pixabay':
           this.pixabay
-            .getPixabayImages(query, perPage)
+            .getPixabayImages(query, perPage, page)
             .subscribe((images: any) => {
               const imageArr: Image[] = images.hits.map(
                 (image) => new Image(image, 'pixabay')
@@ -63,7 +65,7 @@ export class ImageStorageService {
 
         case 'unsplash':
           this.unsplash
-            .getUnsplashImages(query, perPage)
+            .getUnsplashImages(query, perPage, page)
             .subscribe((images: any) => {
               const imageArr: Image[] = images.results.map(
                 (image) => new Image(image, 'unsplash')

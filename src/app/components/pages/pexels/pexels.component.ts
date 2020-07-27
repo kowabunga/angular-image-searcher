@@ -13,17 +13,22 @@ export class PexelsComponent implements OnInit, OnDestroy {
   queryString: string;
   getQueryString: any;
   getImages: any;
+  firstLoad: boolean = true;
 
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
     // Subscribe to image array changes in image storage service and load said images into component image array
     this.getImages = this.imageStorage.pexelsImages.subscribe((images) => {
-      //@TODO Old query string to compare.
-      // !If same query string, do this.
-      // this.pexelsImages = [...this.pexelsImages, ...images];
-      // !If diff query string, do this:
-      this.pexelsImages = images;
+      //on initial component load, store images directly in image array
+      if (this.firstLoad) {
+        this.pexelsImages = images;
+        this.firstLoad = false;
+      } else {
+        //otherwise, add images to existing array
+        this.pexelsImages = [...this.pexelsImages, ...images];
+      }
+      
       if (sessionStorage.getItem('pexel-images') === null)
         sessionStorage.setItem('pexel-images', JSON.stringify(images));
     });
@@ -38,9 +43,10 @@ export class PexelsComponent implements OnInit, OnDestroy {
       if (
         this.queryString === '' &&
         sessionStorage.getItem('query-string') !== null
-      )
+      ) {
         this.queryString = sessionStorage.getItem('query-string');
-      console.log(this.queryString);
+        this.firstLoad = false;
+      }
     });
 
     // Check if image array is empty and there are items in session storage. If so, grab the items from session storage

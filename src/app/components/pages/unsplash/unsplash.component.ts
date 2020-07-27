@@ -15,17 +15,22 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   queryString: string;
   getQueryString: any;
   getImages: any;
+  firstLoad: boolean = true;
 
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
     // Subscribe to image array changes in image storage service and load said images into component image array
     this.getImages = this.imageStorage.unsplashImages.subscribe((images) => {
-      //@TODO Old query string to compare.
-      // !If same query string, do this.
-      // this.unsplashImages = [...this.unsplashImages, ...images];
-      // !If diff query string, do this:
-      this.unsplashImages = images;
+      //on initial component load, store images directly in image array
+      if (this.firstLoad) {
+        this.unsplashImages = images;
+        this.firstLoad=false;
+      } else {
+        //otherwise, add images to existing array
+        this.unsplashImages = [...this.unsplashImages, ...images];
+      }
+
       if (sessionStorage.getItem('unsplash-images') === null)
         sessionStorage.setItem('unsplash-images', JSON.stringify(images));
     });

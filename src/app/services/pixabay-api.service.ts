@@ -12,9 +12,9 @@ export class PixabayApiService {
 
   constructor(private http: HttpClient) {}
 
-  getPixabayImages(query: string, perPage: number): Observable<any> {
+  getPixabayImages(query: string, perPage: number, page:number): Observable<any> {
     return this.http.get<any>(
-      `https://pixabay.com/api/?key=${environment.PIXABAY_API}&q=${query}&image_type=photo&pretty=true&per_page=${perPage}`
+      `https://pixabay.com/api/?key=${environment.PIXABAY_API}&q=${query}&image_type=photo&pretty=true&per_page=${perPage}&page=${page}`
     );
   }
 }

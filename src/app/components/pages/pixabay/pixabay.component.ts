@@ -12,17 +12,22 @@ export class PixabayComponent implements OnInit, OnDestroy {
   queryString: string;
   getQueryString: any;
   getImages: any;
+  firstLoad: boolean = true;
 
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
     // Subscribe to image array changes in image storage service and load said images into component image array
     this.getImages = this.imageStorage.pixabayImages.subscribe((images) => {
-      //@TODO Old query string to compare.
-      // !If same query string, do this.
-      // this.pixabayImages = [...this.pixabayImages, ...images];
-      // !If diff query string, do this:
-      this.pixabayImages = images;
+      //on initial component load, store images directly in image array
+      if (this.firstLoad) {
+        this.pixabayImages = images;
+        this.firstLoad = false;
+      } else {
+        //otherwise, add images to existing array
+        this.pixabayImages = [...this.pixabayImages, ...images];
+      }
+
       if (sessionStorage.getItem('pixabay-images') === null)
         sessionStorage.setItem('pixabay-images', JSON.stringify(images));
     });
