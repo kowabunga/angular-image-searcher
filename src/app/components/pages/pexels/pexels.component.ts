@@ -12,30 +12,21 @@ export class PexelsComponent implements OnInit, OnDestroy {
   pexelsImages: Image[] = [];
   queryString: string;
   getQueryString: any;
+  oldQueryString: string;
   getImages: any;
   firstLoad: boolean = true;
 
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
-    // Subscribe to image array changes in image storage service and load said images into component image array
-    this.getImages = this.imageStorage.pexelsImages.subscribe((images) => {
-      //on initial component load, store images directly in image array
-      if (this.firstLoad) {
-        this.pexelsImages = images;
-        this.firstLoad = false;
-      } else {
-        //otherwise, add images to existing array
-        this.pexelsImages = [...this.pexelsImages, ...images];
-      }
-      
-      if (sessionStorage.getItem('pexel-images') === null)
-        sessionStorage.setItem('pexel-images', JSON.stringify(images));
-    });
-
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
+      // Make sure to
       this.imageStorage.getImagesFromApi(query, 'pexels');
+
+      if (this.queryString !== query && this.queryString !== undefined) {
+        this.oldQueryString = this.queryString;
+      }
 
       this.queryString = query;
 
@@ -47,6 +38,24 @@ export class PexelsComponent implements OnInit, OnDestroy {
         this.queryString = sessionStorage.getItem('query-string');
         this.firstLoad = false;
       }
+    });
+
+    // Subscribe to image array changes in image storage service and load said images into component image array
+    this.getImages = this.imageStorage.pexelsImages.subscribe((images) => {
+      // on initial component load, store images directly in image array
+      // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
+      if (this.firstLoad || this.queryString !== this.oldQueryString) {
+        this.pexelsImages = images;
+        this.firstLoad = false;
+        this.oldQueryString = this.queryString;
+      } else {
+        // otherwise, add images to existing array
+        console.log('Equal, obvs');
+        this.pexelsImages = [...this.pexelsImages, ...images];
+      }
+
+      if (sessionStorage.getItem('pexel-images') === null)
+        sessionStorage.setItem('pexel-images', JSON.stringify(images));
     });
 
     // Check if image array is empty and there are items in session storage. If so, grab the items from session storage

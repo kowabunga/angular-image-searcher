@@ -29,7 +29,6 @@ export class ImagePageComponent implements OnInit {
     this.type = this.router.snapshot.params.type;
     this.image = history.state.image;
     this.prevLocation = history.state.prevLocation;
-    console.log(history.state);
     if (this.image.type === 'pixabay' || this.image.type === 'unsplash') {
       this.getTags();
     }

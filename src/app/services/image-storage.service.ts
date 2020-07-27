@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Image } from '../models/image';
-import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { PexelsApiService } from './pexels-api.service';
 import { PixabayApiService } from './pixabay-api.service';
 import { UnsplashApiService } from './unsplash-api.service';
@@ -29,6 +29,7 @@ export class ImageStorageService {
 
   setQueryString(query: string) {
     sessionStorage.setItem('query-string', query);
+
     if (query !== '') this.query.next(query);
   }
 

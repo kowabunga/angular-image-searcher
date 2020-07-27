@@ -11,30 +11,20 @@ export class PixabayComponent implements OnInit, OnDestroy {
   pixabayImages: Image[] = [];
   queryString: string;
   getQueryString: any;
+  oldQueryString: string = '';
   getImages: any;
   firstLoad: boolean = true;
 
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
-    // Subscribe to image array changes in image storage service and load said images into component image array
-    this.getImages = this.imageStorage.pixabayImages.subscribe((images) => {
-      //on initial component load, store images directly in image array
-      if (this.firstLoad) {
-        this.pixabayImages = images;
-        this.firstLoad = false;
-      } else {
-        //otherwise, add images to existing array
-        this.pixabayImages = [...this.pixabayImages, ...images];
-      }
-
-      if (sessionStorage.getItem('pixabay-images') === null)
-        sessionStorage.setItem('pixabay-images', JSON.stringify(images));
-    });
-
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
       this.imageStorage.getImagesFromApi(query, 'pixabay');
+
+      if (this.queryString !== query && this.queryString !== undefined) {
+        this.oldQueryString = this.queryString;
+      }
 
       this.queryString = query;
 
@@ -42,13 +32,34 @@ export class PixabayComponent implements OnInit, OnDestroy {
       if (
         this.queryString === '' &&
         sessionStorage.getItem('query-string') !== null
-      )
+      ) {
         this.queryString = sessionStorage.getItem('query-string');
-      console.log(this.queryString);
+      }
+    });
+
+    // Subscribe to image array changes in image storage service and load said images into component image array
+    this.getImages = this.imageStorage.pixabayImages.subscribe((images) => {
+      // on initial component load, store images directly in image array
+      // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
+      if (this.firstLoad || this.queryString !== this.oldQueryString) {
+        this.pixabayImages = images;
+        this.firstLoad = false;
+        this.oldQueryString = this.queryString;
+      } else {
+        // otherwise, add images to existing array
+        console.log('Equal, obvs');
+        this.pixabayImages = [...this.pixabayImages, ...images];
+      }
+
+      if (sessionStorage.getItem('pixabay-images') === null)
+        sessionStorage.setItem('pixabay-images', JSON.stringify(images));
     });
 
     // Check if image array is empty and there are items in session storage. If so, grab the items from session storage
-    if (sessionStorage.getItem('pixabay-images') !== null) {
+    if (
+      this.pixabayImages.length === 0 &&
+      sessionStorage.getItem('pixabay-images') !== null
+    ) {
       this.pixabayImages = JSON.parse(sessionStorage.getItem('pixabay-images'));
     }
   }

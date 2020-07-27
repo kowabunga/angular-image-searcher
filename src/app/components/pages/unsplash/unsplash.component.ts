@@ -14,30 +14,20 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   unsplashImages: Image[] = [];
   queryString: string;
   getQueryString: any;
+  oldQueryString: string;
   getImages: any;
   firstLoad: boolean = true;
 
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
-    // Subscribe to image array changes in image storage service and load said images into component image array
-    this.getImages = this.imageStorage.unsplashImages.subscribe((images) => {
-      //on initial component load, store images directly in image array
-      if (this.firstLoad) {
-        this.unsplashImages = images;
-        this.firstLoad=false;
-      } else {
-        //otherwise, add images to existing array
-        this.unsplashImages = [...this.unsplashImages, ...images];
-      }
-
-      if (sessionStorage.getItem('unsplash-images') === null)
-        sessionStorage.setItem('unsplash-images', JSON.stringify(images));
-    });
-
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
       this.imageStorage.getImagesFromApi(query, 'unsplash');
+
+      if (this.queryString !== query && this.queryString !== undefined) {
+        this.oldQueryString = this.queryString;
+      }
 
       this.queryString = query;
 
@@ -48,6 +38,24 @@ export class UnsplashComponent implements OnInit, OnDestroy {
       )
         this.queryString = sessionStorage.getItem('query-string');
       console.log(this.queryString);
+    });
+
+    // Subscribe to image array changes in image storage service and load said images into component image array
+    this.getImages = this.imageStorage.unsplashImages.subscribe((images) => {
+      // on initial component load, store images directly in image array
+      // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
+      if (this.firstLoad || this.queryString !== this.oldQueryString) {
+        this.unsplashImages = images;
+        this.firstLoad = false;
+        this.oldQueryString = this.queryString;
+      } else {
+        // otherwise, add images to existing array
+        console.log('Equal, obvs');
+        this.unsplashImages = [...this.unsplashImages, ...images];
+      }
+
+      if (sessionStorage.getItem('unsplash-images') === null)
+        sessionStorage.setItem('unsplash-images', JSON.stringify(images));
     });
 
     // Check if image array is empty and there are items in session storage. If so, grab the items from session storage
