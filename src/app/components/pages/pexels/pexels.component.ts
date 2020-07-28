@@ -20,6 +20,15 @@ export class PexelsComponent implements OnInit, OnDestroy {
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
+    // Check if image array is empty and there are items in session storage. If so, grab the items from session storage
+    if (
+      this.pexelsImages.length === 0 &&
+      sessionStorage.getItem('pexel-images') !== null
+    ) {
+      this.pexelsImages = JSON.parse(sessionStorage.getItem('pexel-images'));
+      this.queryString = sessionStorage.getItem('query-string');
+    }
+
     // Load page number
     if (sessionStorage.getItem('pexels-pageNum') !== null) {
       this.pageNumber = parseInt(sessionStorage.getItem('pexels-pageNum'));
@@ -38,7 +47,9 @@ export class PexelsComponent implements OnInit, OnDestroy {
       }
 
       // Make sure to
-      this.imageStorage.getImagesFromApi(this.queryString, 'pexels');
+      if (this.queryString != this.oldQueryString) {
+        this.imageStorage.getImagesFromApi(this.queryString, 'pexels');
+      }
     });
 
     // Subscribe to image array changes in image storage service and load said images into component image array
@@ -65,19 +76,6 @@ export class PexelsComponent implements OnInit, OnDestroy {
         sessionStorage.setItem('pexel-images', JSON.stringify(images));
       }
     });
-
-    // Check if image array is empty and there are items in session storage. If so, grab the items from session storage
-    if (
-      this.pexelsImages.length === 0 &&
-      sessionStorage.getItem('pexel-images') !== null
-    ) {
-      this.pexelsImages = JSON.parse(sessionStorage.getItem('pexel-images'));
-      this.oldQueryString = sessionStorage.getItem('query-string');
-      this.queryString = sessionStorage.getItem('query-string');
-    }
-
-    // Handle loading more images on scroll to bottom
-    // window.addEventListener('scroll', this.loadPictures);
   }
 
   ngOnDestroy(): void {

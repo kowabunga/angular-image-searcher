@@ -20,6 +20,17 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
+    // Check if image array is empty and there are items in session storage. If so, grab the items from session storage
+    if (
+      this.unsplashImages.length === 0 &&
+      sessionStorage.getItem('unsplash-images') !== null
+    ) {
+      this.unsplashImages = JSON.parse(
+        sessionStorage.getItem('unsplash-images')
+      );
+      this.queryString = sessionStorage.getItem('query-string');
+    }
+
     // Load page number
     if (sessionStorage.getItem('unsplash-pageNum') !== null) {
       this.pageNumber = parseInt(sessionStorage.getItem('unsplash-pageNum'));
@@ -38,7 +49,9 @@ export class UnsplashComponent implements OnInit, OnDestroy {
         this.firstLoad = false;
       }
 
-      this.imageStorage.getImagesFromApi(this.queryString, 'unsplash');
+      if (this.queryString != this.oldQueryString) {
+        this.imageStorage.getImagesFromApi(this.queryString, 'unsplash');
+      }
     });
 
     // Subscribe to image array changes in image storage service and load said images into component image array
@@ -64,18 +77,6 @@ export class UnsplashComponent implements OnInit, OnDestroy {
       if (sessionStorage.getItem('unsplash-images') === null)
         sessionStorage.setItem('unsplash-images', JSON.stringify(images));
     });
-
-    // Check if image array is empty and there are items in session storage. If so, grab the items from session storage
-    if (
-      this.unsplashImages.length === 0 &&
-      sessionStorage.getItem('unsplash-images') !== null
-    ) {
-      this.unsplashImages = JSON.parse(
-        sessionStorage.getItem('unsplash-images')
-      );
-      this.oldQueryString = sessionStorage.getItem('query-string');
-      this.queryString = sessionStorage.getItem('query-string');
-    }
   }
 
   ngOnDestroy(): void {

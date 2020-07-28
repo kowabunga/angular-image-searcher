@@ -21,6 +21,15 @@ export class PixabayComponent implements OnInit, OnDestroy {
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
+    // Check if image array is empty and there are items in session storage. If so, grab the items from session storage
+    if (
+      this.pixabayImages.length === 0 &&
+      sessionStorage.getItem('pixabay-images') !== null
+    ) {
+      this.pixabayImages = JSON.parse(sessionStorage.getItem('pixabay-images'));
+      this.queryString = sessionStorage.getItem('query-string');
+    }
+
     // Load page number
     if (sessionStorage.getItem('pixabay-pageNum') !== null) {
       this.pageNumber = parseInt(sessionStorage.getItem('pixabay-pageNum'));
@@ -39,13 +48,9 @@ export class PixabayComponent implements OnInit, OnDestroy {
         this.firstLoad = false;
       }
 
-      this.imageStorage.getImagesFromApi(this.queryString, 'pixabay');
-
-      // if (this.queryString !== query && this.queryString !== undefined) {
-      //   this.oldQueryString = this.queryString;
-      //   // If query changes, make sure the saved page number is reset.
-
-      // }
+      if (this.queryString != this.oldQueryString) {
+        this.imageStorage.getImagesFromApi(this.queryString, 'pixabay');
+      }
     });
 
     // Subscribe to image array changes in image storage service and load said images into component image array
@@ -71,16 +76,6 @@ export class PixabayComponent implements OnInit, OnDestroy {
         sessionStorage.setItem('pixabay-images', JSON.stringify(images));
       }
     });
-
-    // Check if image array is empty and there are items in session storage. If so, grab the items from session storage
-    if (
-      this.pixabayImages.length === 0 &&
-      sessionStorage.getItem('pixabay-images') !== null
-    ) {
-      this.pixabayImages = JSON.parse(sessionStorage.getItem('pixabay-images'));
-      this.oldQueryString = sessionStorage.getItem('query-string');
-      this.queryString = sessionStorage.getItem('query-string');
-    }
   }
 
   ngOnDestroy(): void {
