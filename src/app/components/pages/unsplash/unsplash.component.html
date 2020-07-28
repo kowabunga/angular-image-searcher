@@ -3,7 +3,10 @@
   <app-navbar class="unsplash-app-navbar"></app-navbar>
 </div>
 <div>
-  <app-image-gallery [gallery]="unsplashImages"></app-image-gallery>
+  <app-image-gallery
+    [gallery]="unsplashImages"
+    *ngIf="!noPics; else emptyArray"
+  ></app-image-gallery>
   <app-spinner *ngIf="morePics"></app-spinner>
   <div
     infiniteScroll
@@ -12,3 +15,7 @@
     (scrolled)="loadPictures()"
   ></div>
 </div>
+
+<ng-template #emptyArray>
+  <app-no-pics></app-no-pics>
+</ng-template>

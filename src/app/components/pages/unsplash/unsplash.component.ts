@@ -16,6 +16,7 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   firstLoad: boolean = true;
   pageNumber: number = 1;
   morePics: boolean = false;
+  noPics: boolean = false;
 
   constructor(private imageStorage: ImageStorageService) {}
 
@@ -45,19 +46,25 @@ export class UnsplashComponent implements OnInit, OnDestroy {
 
     // Subscribe to image array changes in image storage service and load said images into component image array
     this.getImages = this.imageStorage.unsplashImages.subscribe((images) => {
-      // on initial component load, store images directly in image array
-      // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
-      if (this.queryString !== sessionStorage.getItem('query-string')) {
-        this.unsplashImages = images;
-        this.firstLoad = false;
-        this.oldQueryString = this.queryString;
-        sessionStorage.setItem('unsplash-pageNum', '1');
-        this.pageNumber = 1;
-      } else if (!this.morePics) {
-        // otherwise, add images to existing array and update session storage
-        this.unsplashImages = [...this.unsplashImages, ...images];
+      if (images.length === 0) {
+        this.noPics = true;
+      } else {
+        this.noPics = false;
+        this.morePics = true;
+
+        // on initial component load, store images directly in image array
+        // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
+        if (this.queryString !== this.oldQueryString) {
+          this.unsplashImages = images;
+          this.firstLoad = false;
+          this.oldQueryString = this.queryString;
+          this.pageNumber = 1;
+        } else {
+          // otherwise, add images to existing array and update session storage
+          this.unsplashImages = [...this.unsplashImages, ...images];
+        }
       }
-      this.morePics = true;
+      this.morePics = false;
     });
   }
 
@@ -75,10 +82,6 @@ export class UnsplashComponent implements OnInit, OnDestroy {
         ++this.pageNumber
       );
       this.morePics = false;
-      sessionStorage.setItem(
-        'unsplash-pageNum',
-        JSON.stringify(this.pageNumber)
-      );
     }
   }
 }

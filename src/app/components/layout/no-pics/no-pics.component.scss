@@ -1,0 +1,24 @@
+.no-pic-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 2rem;
+  .no-pics {
+    padding: 1.5rem;
+    width: 80%;
+    background-color: rgb(247, 247, 247, 0.5);
+    border-radius: 5px;
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      color: darken($color: #4c87f5, $amount: 5);
+    }
+
+    p {
+      font-size: 2rem;
+      line-height: 1.5;
+      font-weight: 300;
+    }
+  }
+}

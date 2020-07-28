@@ -16,11 +16,12 @@ export class PixabayComponent implements OnInit, OnDestroy {
   firstLoad: boolean = true;
   pageNumber: number = 1;
   morePics: boolean = false;
+  noPics: boolean = false;
 
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
-// Subscribe to query string behaviorsubject to get constant update of latest query value
+    // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
       this.queryString = query;
 
@@ -40,22 +41,26 @@ export class PixabayComponent implements OnInit, OnDestroy {
 
     // Subscribe to image array changes in image storage service and load said images into component image array
     this.getImages = this.imageStorage.pixabayImages.subscribe((images) => {
-      // on initial component load, store images directly in image array
-      // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
-      if (
-        this.queryString !== sessionStorage.getItem('query-string')
-      ) {
-        console.log('First load and shiz');
-        this.pixabayImages = images;
-        this.firstLoad = false;
-        this.oldQueryString = this.queryString;
-        this.pageNumber = 1;
-      } else if (!this.morePics) {
-        // otherwise, add images to existing array and update session storage
-        console.log('!morePics');
-        this.pixabayImages = [...this.pixabayImages, ...images];
+      if (images.length === 0) {
+        this.noPics = true;
+      } else {
+        this.noPics = false;
+        this.morePics = true;
+        
+        // on initial component load, store images directly in image array
+        // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
+        if (this.queryString !== this.oldQueryString) {
+          console.log('First load and shiz');
+          this.pixabayImages = images;
+          this.firstLoad = false;
+          this.oldQueryString = this.queryString;
+          this.pageNumber = 1;
+        } else {
+          // otherwise, add images to existing array and update session storage
+          this.pixabayImages = [...this.pixabayImages, ...images];
+        }
       }
-      this.morePics = true;
+      this.morePics=false;
     });
   }
 

@@ -12,13 +12,13 @@ export class ImageStorageService {
   private query: BehaviorSubject<string> = new BehaviorSubject('');
   queryString = this.query.asObservable();
 
-  pexImages: Subject<Image[]> = new Subject();
+  private pexImages: Subject<Image[]> = new Subject();
   pexelsImages = this.pexImages.asObservable();
 
-  pixImages: Subject<Image[]> = new Subject();
+  private pixImages: Subject<Image[]> = new Subject();
   pixabayImages = this.pixImages.asObservable();
 
-  unImages: Subject<Image[]> = new Subject();
+  private unImages: Subject<Image[]> = new Subject();
   unsplashImages = this.unImages.asObservable();
 
   constructor(
@@ -81,7 +81,7 @@ export class ImageStorageService {
   }
 
   getImages(images: Image[], type: string): void {
-    // Add images to image array *and* add to session storage based on picture type
+    // Add images to image array based on type
 
     switch (type) {
       case 'pexels':
