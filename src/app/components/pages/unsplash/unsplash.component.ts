@@ -1,9 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Image } from '../../../models/image';
-import { UnsplashApiService } from 'src/app/services/unsplash-api.service';
 import { ImageStorageService } from 'src/app/services/image-storage.service';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-unsplash',
@@ -23,18 +20,13 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
+    // Load page number
     if (sessionStorage.getItem('unsplash-pageNum') !== null) {
       this.pageNumber = parseInt(sessionStorage.getItem('unsplash-pageNum'));
     }
 
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
-      this.imageStorage.getImagesFromApi(query, 'unsplash');
-
-      if (this.queryString !== query && this.queryString !== undefined) {
-        this.oldQueryString = this.queryString;
-      }
-
       this.queryString = query;
 
       // On page reload, behavior subject can return empty string (since its default value is an empty string). If so, grab the item from session storage
@@ -45,6 +37,8 @@ export class UnsplashComponent implements OnInit, OnDestroy {
         this.queryString = sessionStorage.getItem('query-string');
         this.firstLoad = false;
       }
+
+      this.imageStorage.getImagesFromApi(this.queryString, 'unsplash');
     });
 
     // Subscribe to image array changes in image storage service and load said images into component image array
@@ -55,12 +49,16 @@ export class UnsplashComponent implements OnInit, OnDestroy {
         this.unsplashImages = images;
         this.firstLoad = false;
         this.oldQueryString = this.queryString;
+        sessionStorage.setItem('unsplash-pageNum', '1');
+        this.pageNumber = 1;
       } else {
-        // otherwise, add images to existing array
-        console.log('Equal, obvs');
+        // otherwise, add images to existing array and update session storage
         this.unsplashImages = [...this.unsplashImages, ...images];
+        sessionStorage.setItem(
+          'unsplash-images',
+          JSON.stringify(this.unsplashImages)
+        );
       }
-
       this.morePics = true;
 
       if (sessionStorage.getItem('unsplash-images') === null)

@@ -26,16 +26,9 @@ export class PexelsComponent implements OnInit, OnDestroy {
     }
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
-      // Make sure to
-      this.imageStorage.getImagesFromApi(query, 'pexels');
-
-      if (this.queryString !== query && this.queryString !== undefined) {
-        this.oldQueryString = this.queryString;
-      }
-
+      // On page reload, behavior subject can return empty string (since its default value is an empty string). If so, grab the item from session storage
       this.queryString = query;
 
-      // On page reload, behavior subject can return empty string (since its default value is an empty string). If so, grab the item from session storage
       if (
         this.queryString === '' &&
         sessionStorage.getItem('query-string') !== null
@@ -43,6 +36,9 @@ export class PexelsComponent implements OnInit, OnDestroy {
         this.queryString = sessionStorage.getItem('query-string');
         this.firstLoad = false;
       }
+
+      // Make sure to
+      this.imageStorage.getImagesFromApi(this.queryString, 'pexels');
     });
 
     // Subscribe to image array changes in image storage service and load said images into component image array
@@ -53,14 +49,21 @@ export class PexelsComponent implements OnInit, OnDestroy {
         this.pexelsImages = images;
         this.firstLoad = false;
         this.oldQueryString = this.queryString;
+        sessionStorage.setItem('pexels-pageNum', '1');
+        this.pageNumber = 1;
       } else {
-        // otherwise, add images to existing array
+        // otherwise, add images to existing array and update session storage
         this.pexelsImages = [...this.pexelsImages, ...images];
+        sessionStorage.setItem(
+          'pexel-images',
+          JSON.stringify(this.pexelsImages)
+        );
       }
       this.morePics = true;
 
-      if (sessionStorage.getItem('pexel-images') === null)
+      if (sessionStorage.getItem('pexel-images') === null) {
         sessionStorage.setItem('pexel-images', JSON.stringify(images));
+      }
     });
 
     // Check if image array is empty and there are items in session storage. If so, grab the items from session storage
