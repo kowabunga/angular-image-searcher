@@ -1,11 +1,14 @@
 <div class="pexels">
-  <app-search-bar
-    class="pexels-app-search-bar"
-  ></app-search-bar>
+  <app-search-bar class="pexels-app-search-bar"></app-search-bar>
   <app-navbar class="pexels-app-navbar"></app-navbar>
 </div>
-<div> 
-  <app-image-gallery
-    [gallery]="pexelsImages"
-  ></app-image-gallery>
+<div>
+  <app-image-gallery [gallery]="pexelsImages"></app-image-gallery>
+  <app-spinner *ngIf="morePics"></app-spinner>
+  <div
+    infiniteScroll
+    [infiniteScrollDistance]="0.5"
+    [infiniteScrollThrottle]="1000"
+    (scrolled)="loadPictures()"
+  ></div>
 </div>

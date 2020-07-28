@@ -4,4 +4,11 @@
 </div>
 <div>
   <app-image-gallery [gallery]="unsplashImages"></app-image-gallery>
+    <app-spinner *ngIf="morePics"></app-spinner>
+  <div
+    infiniteScroll
+    [infiniteScrollDistance]="0.5"
+    [infiniteScrollThrottle]="1000"
+    (scrolled)="loadPictures()"
+  ></div>
 </div>

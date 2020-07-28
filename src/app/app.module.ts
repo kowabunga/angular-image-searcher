@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 import { AppComponent } from './app.component';
 import { ImageBoxComponent } from './components/layout/image-box/image-box.component';
@@ -17,6 +18,7 @@ import { SearchBarComponent } from './components/search-bar/search-bar.component
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ImagePageComponent } from './components/pages/image-page/image-page.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
+import { SpinnerComponent } from './components/layout/spinner/spinner.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,7 @@ import { NotFoundComponent } from './components/pages/not-found/not-found.compon
     SearchBarComponent,
     ImagePageComponent,
     NotFoundComponent,
+    SpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,6 +42,7 @@ import { NotFoundComponent } from './components/pages/not-found/not-found.compon
     HttpClientModule,
     FormsModule,
     FontAwesomeModule,
+    InfiniteScrollModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

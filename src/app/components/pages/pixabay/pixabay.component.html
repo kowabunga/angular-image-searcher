@@ -1,11 +1,14 @@
 <div class="pixabay">
-  <app-search-bar
-    class="pixabay-app-search-bar"
-  ></app-search-bar>
+  <app-search-bar class="pixabay-app-search-bar"></app-search-bar>
   <app-navbar class="pixabay-app-navbar"></app-navbar>
 </div>
 <div>
-  <app-image-gallery
-    [gallery]="pixabayImages"
-  ></app-image-gallery>
+  <app-image-gallery [gallery]="pixabayImages"></app-image-gallery>
+  <app-spinner *ngIf="morePics"></app-spinner>
+  <div
+    infiniteScroll
+    [infiniteScrollDistance]="0.5"
+    [infiniteScrollThrottle]="1000"
+    (scrolled)="loadPictures()"
+  ></div>
 </div>

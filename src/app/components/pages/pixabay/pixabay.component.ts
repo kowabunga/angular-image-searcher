@@ -14,10 +14,17 @@ export class PixabayComponent implements OnInit, OnDestroy {
   oldQueryString: string = '';
   getImages: any;
   firstLoad: boolean = true;
+  pageNumber: number = 1;
+  morePics: boolean = false;
 
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
+    // Load page number
+    if (sessionStorage.getItem('pixabay-pageNum') !== null) {
+      this.pageNumber = parseInt(sessionStorage.getItem('pixabay-pageNum'));
+    }
+
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
       this.imageStorage.getImagesFromApi(query, 'pixabay');
@@ -34,6 +41,7 @@ export class PixabayComponent implements OnInit, OnDestroy {
         sessionStorage.getItem('query-string') !== null
       ) {
         this.queryString = sessionStorage.getItem('query-string');
+        this.firstLoad = false;
       }
     });
 
@@ -50,7 +58,7 @@ export class PixabayComponent implements OnInit, OnDestroy {
         console.log('Equal, obvs');
         this.pixabayImages = [...this.pixabayImages, ...images];
       }
-
+      this.morePics = true;
       if (sessionStorage.getItem('pixabay-images') === null)
         sessionStorage.setItem('pixabay-images', JSON.stringify(images));
     });
@@ -67,5 +75,21 @@ export class PixabayComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.getQueryString.unsubscribe();
     this.getImages.unsubscribe();
+  }
+
+  loadPictures(): void {
+    if (this.morePics) {
+      this.imageStorage.getImagesFromApi(
+        this.queryString,
+        'pixabay',
+        30,
+        ++this.pageNumber
+      );
+      this.morePics = false;
+      sessionStorage.setItem(
+        'pixabay-pageNum',
+        JSON.stringify(this.pageNumber)
+      );
+    }
   }
 }

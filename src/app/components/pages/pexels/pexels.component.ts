@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-
 import { Image } from '../../../models/image';
 import { ImageStorageService } from 'src/app/services/image-storage.service';
 
@@ -15,10 +14,16 @@ export class PexelsComponent implements OnInit, OnDestroy {
   oldQueryString: string;
   getImages: any;
   firstLoad: boolean = true;
+  pageNumber: number = 1;
+  morePics: boolean = false;
 
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
+    // Load page number
+    if (sessionStorage.getItem('pexels-pageNum') !== null) {
+      this.pageNumber = parseInt(sessionStorage.getItem('pexels-pageNum'));
+    }
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
       // Make sure to
@@ -50,9 +55,9 @@ export class PexelsComponent implements OnInit, OnDestroy {
         this.oldQueryString = this.queryString;
       } else {
         // otherwise, add images to existing array
-        console.log('Equal, obvs');
         this.pexelsImages = [...this.pexelsImages, ...images];
       }
+      this.morePics = true;
 
       if (sessionStorage.getItem('pexel-images') === null)
         sessionStorage.setItem('pexel-images', JSON.stringify(images));
@@ -64,11 +69,29 @@ export class PexelsComponent implements OnInit, OnDestroy {
       sessionStorage.getItem('pexel-images') !== null
     ) {
       this.pexelsImages = JSON.parse(sessionStorage.getItem('pexel-images'));
+      this.oldQueryString = sessionStorage.getItem('query-string');
+      this.queryString = sessionStorage.getItem('query-string');
     }
+
+    // Handle loading more images on scroll to bottom
+    // window.addEventListener('scroll', this.loadPictures);
   }
 
   ngOnDestroy(): void {
     this.getQueryString.unsubscribe();
     this.getImages.unsubscribe();
+  }
+
+  loadPictures(): void {
+    if (this.morePics) {
+      this.imageStorage.getImagesFromApi(
+        this.queryString,
+        'pexels',
+        30,
+        ++this.pageNumber
+      );
+      this.morePics = false;
+      sessionStorage.setItem('pexels-pageNum', JSON.stringify(this.pageNumber));
+    }
   }
 }

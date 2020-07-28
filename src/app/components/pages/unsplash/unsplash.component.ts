@@ -17,10 +17,16 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   oldQueryString: string;
   getImages: any;
   firstLoad: boolean = true;
+  pageNumber: number = 1;
+  morePics: boolean = false;
 
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
+    if (sessionStorage.getItem('unsplash-pageNum') !== null) {
+      this.pageNumber = parseInt(sessionStorage.getItem('unsplash-pageNum'));
+    }
+
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
       this.imageStorage.getImagesFromApi(query, 'unsplash');
@@ -35,9 +41,10 @@ export class UnsplashComponent implements OnInit, OnDestroy {
       if (
         this.queryString === '' &&
         sessionStorage.getItem('query-string') !== null
-      )
+      ) {
         this.queryString = sessionStorage.getItem('query-string');
-      console.log(this.queryString);
+        this.firstLoad = false;
+      }
     });
 
     // Subscribe to image array changes in image storage service and load said images into component image array
@@ -54,6 +61,8 @@ export class UnsplashComponent implements OnInit, OnDestroy {
         this.unsplashImages = [...this.unsplashImages, ...images];
       }
 
+      this.morePics = true;
+
       if (sessionStorage.getItem('unsplash-images') === null)
         sessionStorage.setItem('unsplash-images', JSON.stringify(images));
     });
@@ -66,11 +75,29 @@ export class UnsplashComponent implements OnInit, OnDestroy {
       this.unsplashImages = JSON.parse(
         sessionStorage.getItem('unsplash-images')
       );
+      this.oldQueryString = sessionStorage.getItem('query-string');
+      this.queryString = sessionStorage.getItem('query-string');
     }
   }
 
   ngOnDestroy(): void {
     this.getQueryString.unsubscribe();
     this.getImages.unsubscribe();
+  }
+
+  loadPictures(): void {
+    if (this.morePics) {
+      this.imageStorage.getImagesFromApi(
+        this.queryString,
+        'unsplash',
+        30,
+        ++this.pageNumber
+      );
+      this.morePics = false;
+      sessionStorage.setItem(
+        'unsplash-pageNum',
+        JSON.stringify(this.pageNumber)
+      );
+    }
   }
 }

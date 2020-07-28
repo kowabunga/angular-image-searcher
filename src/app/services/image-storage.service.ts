@@ -38,7 +38,7 @@ export class ImageStorageService {
     type: string,
     perPage = 30,
     page: number = 1
-  ): void {
+    ): void {
     if (query !== '') {
       switch (type) {
         case 'pexels':
