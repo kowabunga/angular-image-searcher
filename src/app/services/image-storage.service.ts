@@ -38,11 +38,10 @@ export class ImageStorageService {
     type: string,
     perPage = 30,
     page: number = 1
-    ): void {
+  ): void {
     if (query !== '') {
       switch (type) {
         case 'pexels':
-          console.log('GetImages Ran');
           this.pexels
             .getPexelImages(query, perPage, page)
             .subscribe((images: any) => {
@@ -86,29 +85,13 @@ export class ImageStorageService {
 
     switch (type) {
       case 'pexels':
-        // Clear current search results in session storage on new search
-        if (sessionStorage.getItem('pexel-images')) {
-          sessionStorage.removeItem('pexel-images');
-        }
-
         this.pexImages.next(images);
         break;
 
       case 'pixabay':
-        // Clear current search results in session storage on new search
-        if (sessionStorage.getItem('pixabay-images')) {
-          sessionStorage.removeItem('pixabay-images');
-        }
-
         this.pixImages.next(images);
         break;
-
       case 'unsplash':
-        // Clear current search results in session storage on new search
-        if (sessionStorage.getItem('unsplash-images')) {
-          sessionStorage.removeItem('unsplash-images');
-        }
-
         this.unImages.next(images);
         break;
 
