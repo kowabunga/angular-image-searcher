@@ -6,6 +6,7 @@ import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faDownload } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark } from '@fortawesome/free-solid-svg-icons';
 import { faTag } from '@fortawesome/free-solid-svg-icons';
+import { faUnsplash } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
   selector: 'app-image-page',
@@ -22,6 +23,7 @@ export class ImagePageComponent implements OnInit {
   faDownload = faDownload;
   faBookmark = faBookmark;
   faTag = faTag;
+  faUnsplash = faUnsplash;
 
   constructor(private router: ActivatedRoute) {}
 
@@ -29,7 +31,7 @@ export class ImagePageComponent implements OnInit {
     this.type = this.router.snapshot.params.type;
     this.image = history.state.image;
     this.prevLocation = history.state.prevLocation;
-    if (this.image.type === 'pixabay' || this.image.type === 'unsplash') {
+    if (this.type === 'pixabay' || this.type === 'unsplash') {
       this.getTags();
     }
   }

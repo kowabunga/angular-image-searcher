@@ -7,11 +7,10 @@
     [gallery]="pexelsImages"
     *ngIf="!noPics; else emptyArray"
   ></app-image-gallery>
-  <app-spinner *ngIf="morePics"></app-spinner>
   <div
     infiniteScroll
-    [infiniteScrollDistance]="0.5"
-    [infiniteScrollThrottle]="1000"
+    [infiniteScrollDistance]="1"
+    [infiniteScrollThrottle]="0"
     (scrolled)="loadPictures()"
   ></div>
 </div>

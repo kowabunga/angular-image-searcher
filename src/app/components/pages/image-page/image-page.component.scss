@@ -49,7 +49,6 @@
         p {
           font-size: 2rem;
           font-weight: bold;
-          padding: 10px;
         }
       }
 
@@ -120,6 +119,40 @@
         padding: 0.25rem 1rem;
         border-radius: 20px;
         background-color: rgb(215, 139, 235);
+      }
+    }
+
+    .attribution {
+      &-pexel {
+        margin-top: 1rem;
+        height: 50px;
+        width: 142px;
+        &-link {
+          img {
+            width: 100%;
+          }
+        }
+      }
+
+      &-pixabay {
+        margin-top: 1rem;
+        width: 33%;
+        &-link {
+          img {
+            width: 100%;
+          }
+        }
+      }
+
+      &-unsplash {
+        .icon {
+          font-size: 2rem;
+        }
+        &-link {
+          color: #333;
+          text-decoration: none;
+          font-size: 2rem;
+        }
       }
     }
   }

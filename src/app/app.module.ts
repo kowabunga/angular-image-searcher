@@ -18,7 +18,6 @@ import { SearchBarComponent } from './components/search-bar/search-bar.component
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ImagePageComponent } from './components/pages/image-page/image-page.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
-import { SpinnerComponent } from './components/layout/spinner/spinner.component';
 import { NoPicsComponent } from './components/layout/no-pics/no-pics.component';
 
 @NgModule({
@@ -35,7 +34,6 @@ import { NoPicsComponent } from './components/layout/no-pics/no-pics.component';
     SearchBarComponent,
     ImagePageComponent,
     NotFoundComponent,
-    SpinnerComponent,
     NoPicsComponent,
   ],
   imports: [

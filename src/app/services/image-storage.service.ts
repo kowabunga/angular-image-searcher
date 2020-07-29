@@ -81,8 +81,7 @@ export class ImageStorageService {
   }
 
   getImages(images: Image[], type: string): void {
-    // Add images to image array based on type
-
+    // Return images based on type
     switch (type) {
       case 'pexels':
         this.pexImages.next(images);
@@ -91,6 +90,7 @@ export class ImageStorageService {
       case 'pixabay':
         this.pixImages.next(images);
         break;
+
       case 'unsplash':
         this.unImages.next(images);
         break;

@@ -8,6 +8,10 @@
 >
   <div class="image-pexels">
     <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
+    <div class="overlay">
+      <p>Author: {{ image.photographer }}</p>
+      <p>Provided by: Pexels</p>
+    </div>
   </div>
 </a>
 
@@ -19,6 +23,10 @@
 >
   <div class="image-pixabay">
     <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
+    <div class="overlay">
+      <p>Author: {{ image.photographer }}</p>
+      <p>Provided by: Pixabay</p>
+    </div>
   </div>
 </a>
 
@@ -30,5 +38,9 @@
 >
   <div class="image-unsplash">
     <img [src]="image.imageSmall" alt="small image" class="image-box-image" />
+    <div class="overlay">
+      <p>Author: {{ image.photographer }}</p>
+      <p>Provided by: Unsplash</p>
+    </div>
   </div>
 </a>

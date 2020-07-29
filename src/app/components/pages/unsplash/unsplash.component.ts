@@ -15,7 +15,6 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   getImages: any;
   firstLoad: boolean = true;
   pageNumber: number = 1;
-  morePics: boolean = false;
   noPics: boolean = false;
 
   constructor(private imageStorage: ImageStorageService) {}
@@ -50,7 +49,6 @@ export class UnsplashComponent implements OnInit, OnDestroy {
         this.noPics = true;
       } else {
         this.noPics = false;
-        this.morePics = true;
 
         // on initial component load, store images directly in image array
         // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
@@ -64,7 +62,6 @@ export class UnsplashComponent implements OnInit, OnDestroy {
           this.unsplashImages = [...this.unsplashImages, ...images];
         }
       }
-      this.morePics = false;
     });
   }
 
@@ -74,14 +71,11 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   }
 
   loadPictures(): void {
-    if (this.morePics) {
-      this.imageStorage.getImagesFromApi(
-        this.queryString,
-        'unsplash',
-        30,
-        ++this.pageNumber
-      );
-      this.morePics = false;
-    }
+    this.imageStorage.getImagesFromApi(
+      this.queryString,
+      'unsplash',
+      30,
+      ++this.pageNumber
+    );
   }
 }

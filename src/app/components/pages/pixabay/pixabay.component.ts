@@ -13,9 +13,7 @@ export class PixabayComponent implements OnInit, OnDestroy {
   getQueryString: any;
   oldQueryString: string = '';
   getImages: any;
-  firstLoad: boolean = true;
   pageNumber: number = 1;
-  morePics: boolean = false;
   noPics: boolean = false;
 
   constructor(private imageStorage: ImageStorageService) {}
@@ -23,15 +21,14 @@ export class PixabayComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
+      // On page reload, behavior subject can return empty string (since its default value is an empty string). If so, grab the item from session storage
       this.queryString = query;
 
-      // On page reload, behavior subject can return empty string (since its default value is an empty string). If so, grab the item from session storage
       if (
         this.queryString === '' &&
         sessionStorage.getItem('query-string') !== null
       ) {
         this.queryString = sessionStorage.getItem('query-string');
-        this.firstLoad = false;
       }
 
       if (this.queryString != this.oldQueryString) {
@@ -45,14 +42,11 @@ export class PixabayComponent implements OnInit, OnDestroy {
         this.noPics = true;
       } else {
         this.noPics = false;
-        this.morePics = true;
-        
+
         // on initial component load, store images directly in image array
         // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
         if (this.queryString !== this.oldQueryString) {
-          console.log('First load and shiz');
           this.pixabayImages = images;
-          this.firstLoad = false;
           this.oldQueryString = this.queryString;
           this.pageNumber = 1;
         } else {
@@ -60,7 +54,6 @@ export class PixabayComponent implements OnInit, OnDestroy {
           this.pixabayImages = [...this.pixabayImages, ...images];
         }
       }
-      this.morePics=false;
     });
   }
 
@@ -70,14 +63,11 @@ export class PixabayComponent implements OnInit, OnDestroy {
   }
 
   loadPictures(): void {
-    if (this.morePics) {
-      this.imageStorage.getImagesFromApi(
-        this.queryString,
-        'pixabay',
-        30,
-        ++this.pageNumber
-      );
-      this.morePics = false;
-    }
+    this.imageStorage.getImagesFromApi(
+      this.queryString,
+      'pixabay',
+      30,
+      ++this.pageNumber
+    );
   }
 }
