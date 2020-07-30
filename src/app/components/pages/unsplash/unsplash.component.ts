@@ -13,7 +13,6 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   getQueryString: any;
   oldQueryString: string;
   getImages: any;
-  firstLoad: boolean = true;
   pageNumber: number = 1;
   noPics: boolean = false;
 
@@ -35,7 +34,6 @@ export class UnsplashComponent implements OnInit, OnDestroy {
         sessionStorage.getItem('query-string') !== null
       ) {
         this.queryString = sessionStorage.getItem('query-string');
-        this.firstLoad = false;
       }
 
       if (this.queryString != this.oldQueryString) {
@@ -45,23 +43,17 @@ export class UnsplashComponent implements OnInit, OnDestroy {
 
     // Subscribe to image array changes in image storage service and load said images into component image array
     this.getImages = this.imageStorage.unsplashImages.subscribe((images) => {
-      if (images.length === 0) {
-        this.noPics = true;
+      // on initial component load, store images directly in image array
+      // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
+      if (this.queryString !== this.oldQueryString) {
+        this.unsplashImages = images;
+        this.oldQueryString = this.queryString;
+        this.pageNumber = 1;
       } else {
-        this.noPics = false;
-
-        // on initial component load, store images directly in image array
-        // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
-        if (this.queryString !== this.oldQueryString) {
-          this.unsplashImages = images;
-          this.firstLoad = false;
-          this.oldQueryString = this.queryString;
-          this.pageNumber = 1;
-        } else {
-          // otherwise, add images to existing array and update session storage
-          this.unsplashImages = [...this.unsplashImages, ...images];
-        }
+        // otherwise, add images to existing array and update session storage
+        this.unsplashImages = [...this.unsplashImages, ...images];
       }
+      this.noPics = this.unsplashImages.length > 0;
     });
   }
 

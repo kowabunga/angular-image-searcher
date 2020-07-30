@@ -38,22 +38,17 @@ export class PixabayComponent implements OnInit, OnDestroy {
 
     // Subscribe to image array changes in image storage service and load said images into component image array
     this.getImages = this.imageStorage.pixabayImages.subscribe((images) => {
-      if (images.length === 0) {
-        this.noPics = true;
+      // on initial component load, store images directly in image array
+      // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
+      if (this.queryString !== this.oldQueryString) {
+        this.pixabayImages = images;
+        this.oldQueryString = this.queryString;
+        this.pageNumber = 1;
       } else {
-        this.noPics = false;
-
-        // on initial component load, store images directly in image array
-        // query string comparison is for when query changes. On query change, images should be replaced entirely by new query results
-        if (this.queryString !== this.oldQueryString) {
-          this.pixabayImages = images;
-          this.oldQueryString = this.queryString;
-          this.pageNumber = 1;
-        } else {
-          // otherwise, add images to existing array and update session storage
-          this.pixabayImages = [...this.pixabayImages, ...images];
-        }
+        // otherwise, add images to existing array and update session storage
+        this.pixabayImages = [...this.pixabayImages, ...images];
       }
+      this.noPics = this.pixabayImages.length > 0;
     });
   }
 
