@@ -28,9 +28,7 @@ export class ImageStorageService {
   ) {}
 
   setQueryString(query: string) {
-    sessionStorage.setItem('query-string', query);
-
-    if (query !== '') this.query.next(query);
+    this.query.next(query);
   }
 
   getImagesFromApi(
@@ -48,7 +46,7 @@ export class ImageStorageService {
               const imageArr: Image[] = images.photos.map(
                 (image) => new Image(image, 'pexels')
               );
-              this.getImages(imageArr, 'pexels');
+              this.pexImages.next(imageArr);
             });
           break;
 
@@ -59,7 +57,7 @@ export class ImageStorageService {
               const imageArr: Image[] = images.hits.map(
                 (image) => new Image(image, 'pixabay')
               );
-              this.getImages(imageArr, 'pixabay');
+              this.pixImages.next(imageArr);
             });
           break;
 
@@ -70,33 +68,13 @@ export class ImageStorageService {
               const imageArr: Image[] = images.results.map(
                 (image) => new Image(image, 'unsplash')
               );
-              this.getImages(imageArr, 'unsplash');
+              this.unImages.next(imageArr);
             });
           break;
 
         default:
           break;
       }
-    }
-  }
-
-  getImages(images: Image[], type: string): void {
-    // Return images based on type
-    switch (type) {
-      case 'pexels':
-        this.pexImages.next(images);
-        break;
-
-      case 'pixabay':
-        this.pixImages.next(images);
-        break;
-
-      case 'unsplash':
-        this.unImages.next(images);
-        break;
-
-      default:
-        break;
     }
   }
 }

@@ -19,6 +19,10 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
+    if (sessionStorage.getItem('unsplash-page-number') !== null) {
+      this.pageNumber = parseInt(sessionStorage.getItem('pexel-page-number'));
+    }
+
     // Load page number
     if (sessionStorage.getItem('unsplash-pageNum') !== null) {
       this.pageNumber = parseInt(sessionStorage.getItem('unsplash-pageNum'));
@@ -29,15 +33,26 @@ export class UnsplashComponent implements OnInit, OnDestroy {
       this.queryString = query;
 
       // On page reload, behavior subject can return empty string (since its default value is an empty string). If so, grab the item from session storage
-      if (
-        this.queryString === '' &&
-        sessionStorage.getItem('query-string') !== null
-      ) {
-        this.queryString = sessionStorage.getItem('query-string');
+      //Grab old query string
+      if (sessionStorage.getItem('old-unsplash-query') !== null) {
+        this.oldQueryString = sessionStorage.getItem('old-unsplash-query');
       }
 
-      if (this.queryString != this.oldQueryString) {
+      if (
+        this.queryString !== '' &&
+        this.queryString !== undefined &&
+        this.queryString !== this.oldQueryString
+      ) {
+        sessionStorage.removeItem('unsplash-images');
         this.imageStorage.getImagesFromApi(this.queryString, 'unsplash');
+      } else if (
+        (this.queryString === this.oldQueryString || this.queryString === '') &&
+        sessionStorage.getItem('unsplash-images') !== null
+      ) {
+        this.unsplashImages = JSON.parse(
+          sessionStorage.getItem('unsplash-images')
+        );
+        this.noPics = this.unsplashImages.length === 0;
       }
     });
 
@@ -49,11 +64,28 @@ export class UnsplashComponent implements OnInit, OnDestroy {
         this.unsplashImages = images;
         this.oldQueryString = this.queryString;
         this.pageNumber = 1;
+
+        sessionStorage.setItem('old-unsplash-query', this.oldQueryString);
+
+        sessionStorage.setItem(
+          'unsplash-page-number',
+          this.pageNumber.toString()
+        );
+
+        sessionStorage.setItem(
+          'unsplash-images',
+          JSON.stringify(this.unsplashImages)
+        );
       } else {
         // otherwise, add images to existing array and update session storage
         this.unsplashImages = [...this.unsplashImages, ...images];
+
+        sessionStorage.setItem(
+          'unsplash-images',
+          JSON.stringify(this.unsplashImages)
+        );
       }
-      this.noPics = this.unsplashImages.length > 0;
+      this.noPics = this.unsplashImages.length === 0;
     });
   }
 
@@ -69,5 +101,6 @@ export class UnsplashComponent implements OnInit, OnDestroy {
       30,
       ++this.pageNumber
     );
+    sessionStorage.setItem('unsplash-page-number', this.pageNumber.toString());
   }
 }

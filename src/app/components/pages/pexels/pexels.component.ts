@@ -19,21 +19,31 @@ export class PexelsComponent implements OnInit, OnDestroy {
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
+    if (sessionStorage.getItem('pexel-page-number') !== null) {
+      this.pageNumber = parseInt(sessionStorage.getItem('pexel-page-number'));
+    }
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
-      // On page reload, behavior subject can return empty string (since its default value is an empty string). If so, grab the item from session storage
       this.queryString = query;
 
-      if (
-        this.queryString === '' &&
-        sessionStorage.getItem('query-string') !== null
-      ) {
-        this.queryString = sessionStorage.getItem('query-string');
+      //Grab old query string
+      if (sessionStorage.getItem('old-pexel-query') !== null) {
+        this.oldQueryString = sessionStorage.getItem('old-pexel-query');
       }
 
-      // Make sure to
-      if (this.queryString != this.oldQueryString) {
+      if (
+        this.queryString !== '' &&
+        this.queryString !== undefined &&
+        this.queryString !== this.oldQueryString
+      ) {
+        sessionStorage.removeItem('pexels-images');
         this.imageStorage.getImagesFromApi(this.queryString, 'pexels');
+      } else if (
+        (this.queryString === this.oldQueryString || this.queryString === '') &&
+        sessionStorage.getItem('pexels-images') !== null
+      ) {
+        this.pexelsImages = JSON.parse(sessionStorage.getItem('pexels-images'));
+        this.noPics = this.pexelsImages.length === 0;
       }
     });
 
@@ -45,11 +55,25 @@ export class PexelsComponent implements OnInit, OnDestroy {
         this.pexelsImages = images;
         this.oldQueryString = this.queryString;
         this.pageNumber = 1;
+
+        sessionStorage.setItem('old-pexel-query', this.oldQueryString);
+
+        sessionStorage.setItem('pexel-page-number', this.pageNumber.toString());
+
+        sessionStorage.setItem(
+          'pexels-images',
+          JSON.stringify(this.pexelsImages)
+        );
       } else {
         // otherwise, add images to existing array and update session storage
         this.pexelsImages = [...this.pexelsImages, ...images];
+
+        sessionStorage.setItem(
+          'pexels-images',
+          JSON.stringify(this.pexelsImages)
+        );
       }
-      this.noPics = this.pexelsImages.length > 0;
+      this.noPics = this.pexelsImages.length === 0;
     });
   }
 
@@ -65,5 +89,6 @@ export class PexelsComponent implements OnInit, OnDestroy {
       30,
       ++this.pageNumber
     );
+    sessionStorage.setItem('pexel-page-number', this.pageNumber.toString());
   }
 }

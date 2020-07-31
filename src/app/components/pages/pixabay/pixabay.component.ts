@@ -19,20 +19,34 @@ export class PixabayComponent implements OnInit, OnDestroy {
   constructor(private imageStorage: ImageStorageService) {}
 
   ngOnInit(): void {
+    if (sessionStorage.getItem('pixabay-page-number') !== null) {
+      this.pageNumber = parseInt(sessionStorage.getItem('pixabay-page-number'));
+    }
+
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
-      // On page reload, behavior subject can return empty string (since its default value is an empty string). If so, grab the item from session storage
       this.queryString = query;
 
-      if (
-        this.queryString === '' &&
-        sessionStorage.getItem('query-string') !== null
-      ) {
-        this.queryString = sessionStorage.getItem('query-string');
+      //Grab old query string
+      if (sessionStorage.getItem('old-pixabay-query') !== null) {
+        this.oldQueryString = sessionStorage.getItem('old-pixabay-query');
       }
 
-      if (this.queryString != this.oldQueryString) {
+      if (
+        this.queryString !== '' &&
+        this.queryString !== undefined &&
+        this.queryString !== this.oldQueryString
+      ) {
+        sessionStorage.removeItem('pixabay-images');
         this.imageStorage.getImagesFromApi(this.queryString, 'pixabay');
+      } else if (
+        (this.queryString === this.oldQueryString || this.queryString === '') &&
+        sessionStorage.getItem('pixabay-images') !== null
+      ) {
+        this.pixabayImages = JSON.parse(
+          sessionStorage.getItem('pixabay-images')
+        );
+        this.noPics = this.pixabayImages.length === 0;
       }
     });
 
@@ -44,11 +58,28 @@ export class PixabayComponent implements OnInit, OnDestroy {
         this.pixabayImages = images;
         this.oldQueryString = this.queryString;
         this.pageNumber = 1;
+
+        sessionStorage.setItem('old-pixabay-query', this.oldQueryString);
+
+        sessionStorage.setItem(
+          'pixabay-page-number',
+          this.pageNumber.toString()
+        );
+
+        sessionStorage.setItem(
+          'pixabay-images',
+          JSON.stringify(this.pixabayImages)
+        );
       } else {
         // otherwise, add images to existing array and update session storage
         this.pixabayImages = [...this.pixabayImages, ...images];
+
+        sessionStorage.setItem(
+          'pixabay-images',
+          JSON.stringify(this.pixabayImages)
+        );
       }
-      this.noPics = this.pixabayImages.length > 0;
+      this.noPics = this.pixabayImages.length === 0;
     });
   }
 
@@ -64,5 +95,7 @@ export class PixabayComponent implements OnInit, OnDestroy {
       30,
       ++this.pageNumber
     );
+
+    sessionStorage.setItem('pixabay-page-number', this.pageNumber.toString());
   }
 }
