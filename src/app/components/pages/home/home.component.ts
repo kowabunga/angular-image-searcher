@@ -12,13 +12,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   getImages: any = [];
   isHome: boolean = true;
   images: Image[] = [];
+  pageNumber: number = 1;
   constructor(
     private imageStorage: ImageStorageService,
     private router: Router
   ) {}
 
-  // Load some random images on initial page load
   ngOnInit(): void {
+    if (sessionStorage.getItem('home-page-number') !== null) {
+      this.pageNumber = parseInt(sessionStorage.getItem('home-page-number'));
+    }
+
     // Subscribe to image array changes
     this.getImages.push(
       this.imageStorage.pexelsImages.subscribe((images) => {
@@ -48,5 +52,23 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   onSearch(query) {
     this.router.navigate(['/pexels']);
+  }
+
+  loadPictures(): void {
+    ++this.pageNumber;
+    this.imageStorage.getImagesFromApi('random', 'pexels', 10, this.pageNumber);
+    this.imageStorage.getImagesFromApi(
+      'random',
+      'pixabay',
+      10,
+      this.pageNumber
+    );
+    this.imageStorage.getImagesFromApi(
+      'random',
+      'unsplash',
+      10,
+      this.pageNumber
+    );
+    sessionStorage.setItem('home-page-number', this.pageNumber.toString());
   }
 }

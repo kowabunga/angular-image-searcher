@@ -38,6 +38,10 @@ export class UnsplashComponent implements OnInit, OnDestroy {
         this.oldQueryString = sessionStorage.getItem('old-unsplash-query');
       }
 
+      if (this.queryString === '') {
+        this.queryString = this.oldQueryString;
+      }
+
       if (
         this.queryString !== '' &&
         this.queryString !== undefined &&
@@ -49,6 +53,7 @@ export class UnsplashComponent implements OnInit, OnDestroy {
         (this.queryString === this.oldQueryString || this.queryString === '') &&
         sessionStorage.getItem('unsplash-images') !== null
       ) {
+        this.queryString = this.oldQueryString;
         this.unsplashImages = JSON.parse(
           sessionStorage.getItem('unsplash-images')
         );

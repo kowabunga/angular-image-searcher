@@ -32,6 +32,10 @@ export class PixabayComponent implements OnInit, OnDestroy {
         this.oldQueryString = sessionStorage.getItem('old-pixabay-query');
       }
 
+      if(this.queryString===''){
+        this.queryString=this.oldQueryString;
+      }
+
       if (
         this.queryString !== '' &&
         this.queryString !== undefined &&
@@ -40,14 +44,15 @@ export class PixabayComponent implements OnInit, OnDestroy {
         sessionStorage.removeItem('pixabay-images');
         this.imageStorage.getImagesFromApi(this.queryString, 'pixabay');
       } else if (
-        (this.queryString === this.oldQueryString || this.queryString === '') &&
+        this.queryString === this.oldQueryString &&
         sessionStorage.getItem('pixabay-images') !== null
       ) {
+        this.queryString = this.oldQueryString;
         this.pixabayImages = JSON.parse(
           sessionStorage.getItem('pixabay-images')
         );
         this.noPics = this.pixabayImages.length === 0;
-      }
+      } 
     });
 
     // Subscribe to image array changes in image storage service and load said images into component image array

@@ -17,11 +17,11 @@ export class PexelsComponent implements OnInit, OnDestroy {
   noPics: boolean = false;
 
   constructor(private imageStorage: ImageStorageService) {}
-
   ngOnInit(): void {
     if (sessionStorage.getItem('pexel-page-number') !== null) {
       this.pageNumber = parseInt(sessionStorage.getItem('pexel-page-number'));
     }
+
     // Subscribe to query string behaviorsubject to get constant update of latest query value
     this.getQueryString = this.imageStorage.queryString.subscribe((query) => {
       this.queryString = query;
@@ -29,6 +29,10 @@ export class PexelsComponent implements OnInit, OnDestroy {
       //Grab old query string
       if (sessionStorage.getItem('old-pexel-query') !== null) {
         this.oldQueryString = sessionStorage.getItem('old-pexel-query');
+      }
+
+      if (this.queryString === '') {
+        this.queryString = this.oldQueryString;
       }
 
       if (
@@ -39,9 +43,10 @@ export class PexelsComponent implements OnInit, OnDestroy {
         sessionStorage.removeItem('pexels-images');
         this.imageStorage.getImagesFromApi(this.queryString, 'pexels');
       } else if (
-        (this.queryString === this.oldQueryString || this.queryString === '') &&
+        this.queryString === this.oldQueryString &&
         sessionStorage.getItem('pexels-images') !== null
       ) {
+        this.queryString = this.oldQueryString;
         this.pexelsImages = JSON.parse(sessionStorage.getItem('pexels-images'));
         this.noPics = this.pexelsImages.length === 0;
       }

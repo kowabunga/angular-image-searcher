@@ -20,5 +20,11 @@
       [gallery]="images"
       [prevLocation]="'home'"
     ></app-image-gallery>
+    <div
+      infiniteScroll
+      [infiniteScrollDistance]="1"
+      [infiniteScrollThrottle]="0"
+      (scrolled)="loadPictures()"
+    ></div>
   </div>
 </div>
