@@ -43,10 +43,29 @@ export class HomeComponent implements OnInit, OnDestroy {
       })
     );
 
-    // Make api calls
-    this.imageStorage.getImagesFromApi('random', 'pexels', 10);
-    this.imageStorage.getImagesFromApi('random', 'pixabay', 10);
-    this.imageStorage.getImagesFromApi('random', 'unsplash', 10);
+    if (sessionStorage.getItem('home-images') === null) {
+      // Make api calls
+      this.imageStorage.getImagesFromApi(
+        'random',
+        'pexels',
+        10,
+        this.pageNumber
+      );
+      this.imageStorage.getImagesFromApi(
+        'random',
+        'pixabay',
+        10,
+        this.pageNumber
+      );
+      this.imageStorage.getImagesFromApi(
+        'random',
+        'unsplash',
+        10,
+        this.pageNumber
+      );
+    } else {
+      this.images = JSON.parse(sessionStorage.getItem('home-images'));
+    }
   }
 
   ngOnDestroy(): void {
