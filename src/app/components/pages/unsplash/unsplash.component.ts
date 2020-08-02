@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Image } from '../../../models/image';
 import { ImageStorageService } from 'src/app/services/image-storage.service';
+import { PageHistoryService } from 'src/app/services/page-history.service';
 
 @Component({
   selector: 'app-unsplash',
@@ -16,7 +17,10 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   pageNumber: number = 1;
   noPics: boolean = false;
 
-  constructor(private imageStorage: ImageStorageService) {}
+  constructor(
+    private imageStorage: ImageStorageService,
+    private pageHistory: PageHistoryService
+  ) {}
 
   ngOnInit(): void {
     if (sessionStorage.getItem('unsplash-page-number') !== null) {
@@ -50,15 +54,21 @@ export class UnsplashComponent implements OnInit, OnDestroy {
         sessionStorage.removeItem('unsplash-images');
         this.imageStorage.getImagesFromApi(this.queryString, 'unsplash');
       } else if (
-        (this.queryString === this.oldQueryString || this.queryString === '') &&
-        sessionStorage.getItem('unsplash-images') !== null
+        this.queryString === this.oldQueryString &&
+        sessionStorage.getItem('unsplash-images') !== null &&
+        this.oldQueryString === this.getOldQuery()
       ) {
         this.queryString = this.oldQueryString;
         this.unsplashImages = JSON.parse(
           sessionStorage.getItem('unsplash-images')
         );
         this.noPics = this.unsplashImages.length === 0;
+      } else if (this.oldQueryString !== this.getOldQuery()) {
+        const searchParam = this.getOldQuery();
+        this.imageStorage.setQueryString(searchParam);
       }
+
+      this.pageHistory.setCurrentPage();
     });
 
     // Subscribe to image array changes in image storage service and load said images into component image array
@@ -107,5 +117,14 @@ export class UnsplashComponent implements OnInit, OnDestroy {
       ++this.pageNumber
     );
     sessionStorage.setItem('unsplash-page-number', this.pageNumber.toString());
+  }
+
+  getOldQuery(): string {
+    let url = this.pageHistory.getPrevPageFromSessionStorage();
+    url = url.replace(/\//g, '');
+
+    const searchParam = sessionStorage.getItem(`old-${url}-query`);
+
+    return searchParam;
   }
 }

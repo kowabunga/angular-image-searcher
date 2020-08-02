@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Image } from '../../../models/image';
-import { ImageStorageService } from 'src/app/services/image-storage.service';
+import { ImageStorageService } from '../../../services/image-storage.service';
+import { PageHistoryService } from '../../../services/page-history.service';
 
 @Component({
   selector: 'app-pexels',
@@ -16,7 +17,10 @@ export class PexelsComponent implements OnInit, OnDestroy {
   pageNumber: number = 1;
   noPics: boolean = false;
 
-  constructor(private imageStorage: ImageStorageService) {}
+  constructor(
+    private imageStorage: ImageStorageService,
+    private pageHistory: PageHistoryService
+  ) {}
   ngOnInit(): void {
     if (sessionStorage.getItem('pexel-page-number') !== null) {
       this.pageNumber = parseInt(sessionStorage.getItem('pexel-page-number'));
@@ -27,8 +31,8 @@ export class PexelsComponent implements OnInit, OnDestroy {
       this.queryString = query;
 
       //Grab old query string
-      if (sessionStorage.getItem('old-pexel-query') !== null) {
-        this.oldQueryString = sessionStorage.getItem('old-pexel-query');
+      if (sessionStorage.getItem('old-pexels-query') !== null) {
+        this.oldQueryString = sessionStorage.getItem('old-pexels-query');
       }
 
       if (this.queryString === '') {
@@ -44,12 +48,19 @@ export class PexelsComponent implements OnInit, OnDestroy {
         this.imageStorage.getImagesFromApi(this.queryString, 'pexels');
       } else if (
         this.queryString === this.oldQueryString &&
-        sessionStorage.getItem('pexels-images') !== null
+        sessionStorage.getItem('pexels-images') !== null &&
+        this.oldQueryString === this.getOldQuery()
       ) {
+        console.log('this ran');
         this.queryString = this.oldQueryString;
         this.pexelsImages = JSON.parse(sessionStorage.getItem('pexels-images'));
         this.noPics = this.pexelsImages.length === 0;
+      } else if (this.oldQueryString !== this.getOldQuery()) {
+        const searchParam = this.getOldQuery();
+        this.imageStorage.setQueryString(searchParam);
       }
+
+      this.pageHistory.setCurrentPage();
     });
 
     // Subscribe to image array changes in image storage service and load said images into component image array
@@ -61,7 +72,7 @@ export class PexelsComponent implements OnInit, OnDestroy {
         this.oldQueryString = this.queryString;
         this.pageNumber = 1;
 
-        sessionStorage.setItem('old-pexel-query', this.oldQueryString);
+        sessionStorage.setItem('old-pexels-query', this.oldQueryString);
 
         sessionStorage.setItem('pexel-page-number', this.pageNumber.toString());
 
@@ -95,5 +106,14 @@ export class PexelsComponent implements OnInit, OnDestroy {
       ++this.pageNumber
     );
     sessionStorage.setItem('pexel-page-number', this.pageNumber.toString());
+  }
+
+  getOldQuery(): string {
+    let url = this.pageHistory.getPrevPageFromSessionStorage();
+    url = url.replace(/\//g, '');
+
+    const searchParam = sessionStorage.getItem(`old-${url}-query`);
+
+    return searchParam;
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Image } from '../../../models/image';
 import { ImageStorageService } from 'src/app/services/image-storage.service';
+import { PageHistoryService } from 'src/app/services/page-history.service';
 
 @Component({
   selector: 'app-pixabay',
@@ -16,7 +17,10 @@ export class PixabayComponent implements OnInit, OnDestroy {
   pageNumber: number = 1;
   noPics: boolean = false;
 
-  constructor(private imageStorage: ImageStorageService) {}
+  constructor(
+    private imageStorage: ImageStorageService,
+    private pageHistory: PageHistoryService
+  ) {}
 
   ngOnInit(): void {
     if (sessionStorage.getItem('pixabay-page-number') !== null) {
@@ -32,8 +36,8 @@ export class PixabayComponent implements OnInit, OnDestroy {
         this.oldQueryString = sessionStorage.getItem('old-pixabay-query');
       }
 
-      if(this.queryString===''){
-        this.queryString=this.oldQueryString;
+      if (this.queryString === '') {
+        this.queryString = this.oldQueryString;
       }
 
       if (
@@ -45,14 +49,21 @@ export class PixabayComponent implements OnInit, OnDestroy {
         this.imageStorage.getImagesFromApi(this.queryString, 'pixabay');
       } else if (
         this.queryString === this.oldQueryString &&
-        sessionStorage.getItem('pixabay-images') !== null
+        sessionStorage.getItem('pixabay-images') !== null &&
+        this.oldQueryString === this.getOldQuery()
       ) {
+        console.log('this ran');
         this.queryString = this.oldQueryString;
         this.pixabayImages = JSON.parse(
           sessionStorage.getItem('pixabay-images')
         );
         this.noPics = this.pixabayImages.length === 0;
-      } 
+      } else if (this.oldQueryString !== this.getOldQuery()) {
+        const searchParam = this.getOldQuery();
+        this.imageStorage.setQueryString(searchParam);
+      }
+
+      this.pageHistory.setCurrentPage();
     });
 
     // Subscribe to image array changes in image storage service and load said images into component image array
@@ -102,5 +113,14 @@ export class PixabayComponent implements OnInit, OnDestroy {
     );
 
     sessionStorage.setItem('pixabay-page-number', this.pageNumber.toString());
+  }
+
+  getOldQuery(): string {
+    let url = this.pageHistory.getPrevPageFromSessionStorage();
+    url = url.replace(/\//g, '');
+
+    const searchParam = sessionStorage.getItem(`old-${url}-query`);
+
+    return searchParam;
   }
 }
