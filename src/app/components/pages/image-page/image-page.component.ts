@@ -41,8 +41,6 @@ export class ImagePageComponent implements OnInit {
     if (this.type === 'pixabay' || this.type === 'unsplash') {
       this.getTags();
     }
-
-    console.log(this.prevLocation);
   }
 
   getImageFromSessionStorage(type: string, id: string): Image {

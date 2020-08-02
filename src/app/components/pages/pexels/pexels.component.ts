@@ -59,7 +59,6 @@ export class PexelsComponent implements OnInit, OnDestroy {
         sessionStorage.getItem('pexels-images') !== null &&
         this.oldQueryString === this.pageHistory.getOldQuery()
       ) {
-        console.log('this ran');
         this.queryString = this.oldQueryString;
         this.pexelsImages = JSON.parse(sessionStorage.getItem('pexels-images'));
         this.noPics = this.pexelsImages.length === 0;

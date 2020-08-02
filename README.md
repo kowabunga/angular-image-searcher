@@ -1,27 +1,14 @@
 # AngularImageSearcher
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.8.
+AngularImageSearcher is a single page application devoted to making the process of searching for images across multiple open source libaries quickly and easily.
 
-## Development server
+# AngularImageSearcher supports the following functionalities:
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+- Searching for images
+  - The user can search for images across Unsplash, Pixabay, and Pexels.
+  - The user can, once having searched for images, click on the image to see a larger version with details including:
+    - Author (with link back to authors page, respectively)
+    - Link to hosting site (e.g. Pixabay)
+    - Tags/other information associated with the image, made available by the api
+  - Infinite scrolling, enabling access to a greater number of images than normally available with a single api request
+  - Images are stored within the browser, so that if the user executes a request to another api with the same query, the images returned from the previous api are not lost

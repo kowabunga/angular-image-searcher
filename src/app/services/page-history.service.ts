@@ -8,7 +8,6 @@ export class PageHistoryService {
   constructor(private router: Router) {}
 
   setCurrentPage(): void {
-    console.log(this.router.url);
     sessionStorage.setItem('page', this.router.url);
   }
 

@@ -32,7 +32,7 @@ export class Image {
         this.imageLarge = image.largeImageURL;
         this.pageUrl = image.pageURL;
         this.photographer = image.user;
-        this.photographerUrl = `https://pixabay.com/users/${image.user}`;
+        this.photographerUrl = `https://pixabay.com/users/${image.user}-${image.id}`;
         this.downloads = image.downloads;
         this.favorites = image.favorites;
         this.likes = image.likes;
