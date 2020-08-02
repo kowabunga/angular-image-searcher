@@ -27,16 +27,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.getImages.push(
       this.imageStorage.pexelsImages.subscribe((images) => {
         this.images = [...this.images, ...images];
+        sessionStorage.setItem('home-images', JSON.stringify(this.images));
       })
     );
     this.getImages.push(
       this.imageStorage.unsplashImages.subscribe((images) => {
         this.images = [...this.images, ...images];
+        sessionStorage.setItem('home-images', JSON.stringify(this.images));
       })
     );
     this.getImages.push(
       this.imageStorage.pixabayImages.subscribe((images) => {
         this.images = [...this.images, ...images];
+        sessionStorage.setItem('home-images', JSON.stringify(this.images));
       })
     );
 

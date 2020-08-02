@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Image } from 'src/app/models/image';
 import { faArrowCircleLeft } from '@fortawesome/free-solid-svg-icons';
@@ -15,25 +15,51 @@ import { faUnsplash } from '@fortawesome/free-brands-svg-icons';
 })
 export class ImagePageComponent implements OnInit {
   type: string;
+  id: string;
   prevLocation: string;
   image: Image;
+  images: Image[];
   tags: string[];
   faArrowCircleLeft = faArrowCircleLeft;
-  faHeart = faHeart;
   faDownload = faDownload;
   faBookmark = faBookmark;
-  faTag = faTag;
   faUnsplash = faUnsplash;
+  faHeart = faHeart;
+  faTag = faTag;
 
   constructor(private router: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.type = this.router.snapshot.params.type;
-    this.image = history.state.image;
-    this.prevLocation = history.state.prevLocation;
+    this.id = this.router.snapshot.params.id;
+
+    if (sessionStorage.getItem('prev-location') !== null) {
+      this.prevLocation = sessionStorage.getItem('prev-location');
+    }
+
+    this.image = this.getImageFromSessionStorage(this.type, this.id);
     if (this.type === 'pixabay' || this.type === 'unsplash') {
       this.getTags();
     }
+
+    console.log(this.prevLocation);
+  }
+
+  getImageFromSessionStorage(type: string, id: string): Image {
+    if (this.prevLocation === 'home') {
+      this.images = JSON.parse(sessionStorage.getItem('home-images'));
+    } else {
+      this.images = JSON.parse(sessionStorage.getItem(`${type}-images`));
+    }
+
+    let retrievedImage: Image = null;
+    this.images.forEach((image) => {
+      if (image.id === id) {
+        retrievedImage = image;
+      }
+    });
+
+    return retrievedImage;
   }
 
   getTags() {

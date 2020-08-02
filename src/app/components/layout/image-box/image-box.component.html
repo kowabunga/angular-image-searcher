@@ -3,7 +3,7 @@
 <!-- Pexels -->
 <a
   routerLink="/image/{{ image.type }}/{{ image.id }}"
-  [state]="{ image: image, prevLocation: prevLocation }"
+  [state]="{ prevLocation: prevLocation }"
   *ngIf="image.type === 'pexels'"
 >
   <div class="image-pexels">
@@ -18,7 +18,7 @@
 <!-- Pixabay -->
 <a
   routerLink="/image/{{ image.type }}/{{ image.id }}"
-  [state]="{ image: image, prevLocation: prevLocation }"
+  [state]="{ prevLocation: prevLocation }"
   *ngIf="image.type === 'pixabay'"
 >
   <div class="image-pixabay">
@@ -33,7 +33,7 @@
 <!-- Unsplash -->
 <a
   routerLink="/image/{{ image.type }}/{{ image.id }}"
-  [state]="{ image: image, prevLocation: prevLocation }"
+  [state]="{ prevLocation: prevLocation }"
   *ngIf="image.type === 'unsplash'"
 >
   <div class="image-unsplash">

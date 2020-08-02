@@ -22,6 +22,11 @@ export class PexelsComponent implements OnInit, OnDestroy {
     private pageHistory: PageHistoryService
   ) {}
   ngOnInit(): void {
+    // remove home indicator from session storage
+    if (sessionStorage.getItem('prev-location') !== null) {
+      sessionStorage.removeItem('prev-location');
+    }
+
     if (sessionStorage.getItem('pexel-page-number') !== null) {
       this.pageNumber = parseInt(sessionStorage.getItem('pexel-page-number'));
     }
@@ -39,6 +44,7 @@ export class PexelsComponent implements OnInit, OnDestroy {
         this.queryString = this.oldQueryString;
       }
 
+      // If query isn't an empty string, undefined, or equal to the old string, remove the old items from session storage and send request to api for new images
       if (
         this.queryString !== '' &&
         this.queryString !== undefined &&
@@ -46,17 +52,21 @@ export class PexelsComponent implements OnInit, OnDestroy {
       ) {
         sessionStorage.removeItem('pexels-images');
         this.imageStorage.getImagesFromApi(this.queryString, 'pexels');
+
+        // if querystring is equal to old query string and session storage item for images isnt empty AND old query string is equal to query string from previous page - get items from session storage
       } else if (
         this.queryString === this.oldQueryString &&
         sessionStorage.getItem('pexels-images') !== null &&
-        this.oldQueryString === this.getOldQuery()
+        this.oldQueryString === this.pageHistory.getOldQuery()
       ) {
         console.log('this ran');
         this.queryString = this.oldQueryString;
         this.pexelsImages = JSON.parse(sessionStorage.getItem('pexels-images'));
         this.noPics = this.pexelsImages.length === 0;
-      } else if (this.oldQueryString !== this.getOldQuery()) {
-        const searchParam = this.getOldQuery();
+
+        // Else, if old query isn't equal to query from previous page after refresh (i.e. new query), set query string and emit new value repeating above logic
+      } else if (this.oldQueryString !== this.pageHistory.getOldQuery()) {
+        const searchParam = this.pageHistory.getOldQuery();
         this.imageStorage.setQueryString(searchParam);
       }
 
@@ -106,14 +116,5 @@ export class PexelsComponent implements OnInit, OnDestroy {
       ++this.pageNumber
     );
     sessionStorage.setItem('pexel-page-number', this.pageNumber.toString());
-  }
-
-  getOldQuery(): string {
-    let url = this.pageHistory.getPrevPageFromSessionStorage();
-    url = url.replace(/\//g, '');
-
-    const searchParam = sessionStorage.getItem(`old-${url}-query`);
-
-    return searchParam;
   }
 }

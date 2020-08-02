@@ -17,5 +17,13 @@ export class PageHistoryService {
       return sessionStorage.getItem('page');
     }
   }
-  
+
+  getOldQuery(): string {
+    let url = this.getPrevPageFromSessionStorage();
+    url = url.replace(/\//g, '');
+
+    const searchParam = sessionStorage.getItem(`old-${url}-query`);
+
+    return searchParam;
+  }
 }

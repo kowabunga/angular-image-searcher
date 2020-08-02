@@ -13,5 +13,7 @@ export class ImageBoxComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    sessionStorage.setItem('prev-location', this.prevLocation);
+  }
 }

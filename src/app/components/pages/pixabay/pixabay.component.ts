@@ -23,6 +23,11 @@ export class PixabayComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // remove home indicator from session storage
+    if (sessionStorage.getItem('prev-location') !== null) {
+      sessionStorage.removeItem('prev-location');
+    }
+
     if (sessionStorage.getItem('pixabay-page-number') !== null) {
       this.pageNumber = parseInt(sessionStorage.getItem('pixabay-page-number'));
     }
@@ -40,6 +45,7 @@ export class PixabayComponent implements OnInit, OnDestroy {
         this.queryString = this.oldQueryString;
       }
 
+      // If query isn't an empty string, undefined, or equal to the old string, remove the old items from session storage and send request to api for new images
       if (
         this.queryString !== '' &&
         this.queryString !== undefined &&
@@ -47,19 +53,22 @@ export class PixabayComponent implements OnInit, OnDestroy {
       ) {
         sessionStorage.removeItem('pixabay-images');
         this.imageStorage.getImagesFromApi(this.queryString, 'pixabay');
+
+        // if querystring is equal to old query string and session storage item for images isnt empty AND old query string is equal to query string from previous page - get items from session storage
       } else if (
         this.queryString === this.oldQueryString &&
         sessionStorage.getItem('pixabay-images') !== null &&
-        this.oldQueryString === this.getOldQuery()
+        this.oldQueryString === this.pageHistory.getOldQuery()
       ) {
-        console.log('this ran');
         this.queryString = this.oldQueryString;
         this.pixabayImages = JSON.parse(
           sessionStorage.getItem('pixabay-images')
         );
         this.noPics = this.pixabayImages.length === 0;
-      } else if (this.oldQueryString !== this.getOldQuery()) {
-        const searchParam = this.getOldQuery();
+
+        // Else, if old query isn't equal to query from previous page after refresh (i.e. new query), set query string and emit new value repeating above logic
+      } else if (this.oldQueryString !== this.pageHistory.getOldQuery()) {
+        const searchParam = this.pageHistory.getOldQuery();
         this.imageStorage.setQueryString(searchParam);
       }
 
@@ -113,14 +122,5 @@ export class PixabayComponent implements OnInit, OnDestroy {
     );
 
     sessionStorage.setItem('pixabay-page-number', this.pageNumber.toString());
-  }
-
-  getOldQuery(): string {
-    let url = this.pageHistory.getPrevPageFromSessionStorage();
-    url = url.replace(/\//g, '');
-
-    const searchParam = sessionStorage.getItem(`old-${url}-query`);
-
-    return searchParam;
   }
 }

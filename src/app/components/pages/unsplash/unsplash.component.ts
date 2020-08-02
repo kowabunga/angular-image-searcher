@@ -23,6 +23,11 @@ export class UnsplashComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // remove home indicator from session storage
+    if (sessionStorage.getItem('prev-location') !== null) {
+      sessionStorage.removeItem('prev-location');
+    }
+
     if (sessionStorage.getItem('unsplash-page-number') !== null) {
       this.pageNumber = parseInt(sessionStorage.getItem('pexel-page-number'));
     }
@@ -46,6 +51,7 @@ export class UnsplashComponent implements OnInit, OnDestroy {
         this.queryString = this.oldQueryString;
       }
 
+      // If query isn't an empty string, undefined, or equal to the old string, remove the old items from session storage and send request to api for new images
       if (
         this.queryString !== '' &&
         this.queryString !== undefined &&
@@ -53,18 +59,22 @@ export class UnsplashComponent implements OnInit, OnDestroy {
       ) {
         sessionStorage.removeItem('unsplash-images');
         this.imageStorage.getImagesFromApi(this.queryString, 'unsplash');
+
+        // if querystring is equal to old query string and session storage item for images isnt empty AND old query string is equal to query string from previous page - get items from session storage
       } else if (
         this.queryString === this.oldQueryString &&
         sessionStorage.getItem('unsplash-images') !== null &&
-        this.oldQueryString === this.getOldQuery()
+        this.oldQueryString === this.pageHistory.getOldQuery()
       ) {
         this.queryString = this.oldQueryString;
         this.unsplashImages = JSON.parse(
           sessionStorage.getItem('unsplash-images')
         );
         this.noPics = this.unsplashImages.length === 0;
-      } else if (this.oldQueryString !== this.getOldQuery()) {
-        const searchParam = this.getOldQuery();
+
+        // Else, if old query isn't equal to query from previous page after refresh (i.e. new query), set query string and emit new value repeating above logic
+      } else if (this.oldQueryString !== this.pageHistory.getOldQuery()) {
+        const searchParam = this.pageHistory.getOldQuery();
         this.imageStorage.setQueryString(searchParam);
       }
 
@@ -117,14 +127,5 @@ export class UnsplashComponent implements OnInit, OnDestroy {
       ++this.pageNumber
     );
     sessionStorage.setItem('unsplash-page-number', this.pageNumber.toString());
-  }
-
-  getOldQuery(): string {
-    let url = this.pageHistory.getPrevPageFromSessionStorage();
-    url = url.replace(/\//g, '');
-
-    const searchParam = sessionStorage.getItem(`old-${url}-query`);
-
-    return searchParam;
   }
 }
