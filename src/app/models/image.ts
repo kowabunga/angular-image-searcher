@@ -28,7 +28,7 @@ export class Image {
         //comments,downloads,favorites,likes,
         this.id = image.id.toString();
         this.type = type;
-        this.imageSmall = this.changeWebFormatUrl(image.webformatURL);
+        this.imageSmall = image.webformatURL.replace('_640', '_340');
         this.imageLarge = image.largeImageURL;
         this.pageUrl = image.pageURL;
         this.photographer = image.user;
@@ -39,15 +39,20 @@ export class Image {
         this.tagStr = image.tags;
         break;
       case 'unsplash':
+        console.log(image);
         //unsplash has
         // likes, tags,
         this.id = image.id.toString();
         this.type = type;
         this.imageSmall = image.urls.small;
         this.imageLarge = image.urls.raw;
-        this.pageUrl = image.links.html;
+        this.pageUrl = image.links.html.concat(
+          '/?utm_source=AngularImageSearcher&utm_medium=referral'
+        );
         this.photographer = image.user.name;
-        this.photographerUrl = image.user.links.html;
+        this.photographerUrl = image.user.links.html.concat(
+          '/?utm_source=AngularImageSearcher&utm_medium=referral'
+        );
         this.likes = image.likes;
         this.tagArr = image.tags;
         break;
