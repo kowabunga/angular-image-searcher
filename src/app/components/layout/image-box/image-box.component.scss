@@ -12,6 +12,13 @@
     transition: 0.3s ease-out;
     margin: 10px;
     position: relative;
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+
+    img {
+      min-width: 100%;
+    }
 
     .overlay {
       position: absolute;
@@ -61,5 +68,6 @@
   .image-pixabay img,
   .image-unsplash img {
     height: 250px;
+    width: 250px;
   }
 }
